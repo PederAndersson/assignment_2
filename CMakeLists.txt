@@ -4,8 +4,8 @@ project(assignment_2)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(assignment_2 main.cpp
-        sensor_hub.cpp
-        sensor_hub.h
+        sensor.cpp
+        sensor.h
         measurement.cpp
         measurement.h
         utility.cpp
