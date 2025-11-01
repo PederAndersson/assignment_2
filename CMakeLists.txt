@@ -8,7 +8,9 @@ add_executable(assignment_2 main.cpp
         sensor.h
         measurement.cpp
         measurement.h
-        utility.cpp
-        utility.h
+        DataGenerator.cpp
+        DataGenerator.h
         file_handling.cpp
-        file_handling.h)
+        file_handling.h
+        SensorData.cpp
+        SensorData.h)

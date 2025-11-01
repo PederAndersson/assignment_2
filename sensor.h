@@ -6,38 +6,47 @@
 #define ASSIGNMENT_2_SENSOR_H
 #include <string>
 
-struct SensorFunc {
-    float _value = 0;
-    std::string _timestamp;
-    int _id = 0;
-};
+#include "SensorData.h"
+#include "DataGenerator.h"
+
+
 
 class Sensor {
 protected:
-    SensorFunc _sensorbase;
+    SensorData sensorbase_;
 
 public:
     virtual ~Sensor() = default;
     virtual void read() = 0;
 };
 
-class TempSensor : public Sensor {
+
+class TempSensor : public Sensor{
 private:
-    const std::string _type = "Tempsensor";
+    DataGenerator& data_;
+    int id_;
+    std::string_view type_ = "Tempsensor";
 public:
-    void read();
+    TempSensor(DataGenerator& data, int id) : data_(data), id_(id){}
+    void read() override;
 };
 class HumiditySensor : public Sensor {
 private:
-    const std::string _type = "Humiditysensor";
+    DataGenerator& data_;
+    int id_;
+    std::string_view type_ = "Humiditysensor";
 public:
-    void read();
+    HumiditySensor(DataGenerator& data, int id) : data_(data), id_(id){}
+    void read() override;
 };
 class AirqualitySensor : public Sensor {
 private:
-    const std::string _type = "Airqualitysensor";
+    DataGenerator& data_;
+    int id_;
+    std::string_view type_ = "Airqualitysensor";
 public:
-    void read();
+    AirqualitySensor(DataGenerator& data, int id) : data_(data), id_(id){}
+    void read() override;
 };
 
 
