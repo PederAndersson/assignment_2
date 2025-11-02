@@ -10,7 +10,5 @@ add_executable(assignment_2 main.cpp
         measurement.h
         DataGenerator.cpp
         DataGenerator.h
-        file_handling.cpp
-        file_handling.h
         SensorData.cpp
         SensorData.h)

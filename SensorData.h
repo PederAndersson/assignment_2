@@ -6,6 +6,7 @@
 struct SensorData {
     float value_ = 0;
     std::string timestamp_;
+    std::string unit_;
     int id_ = 0;
 
 };

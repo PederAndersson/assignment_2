@@ -23,32 +23,64 @@ public:
 
 class TempSensor : public Sensor{
 private:
-    DataGenerator& data_;
     int id_;
     std::string_view type_ = "Tempsensor";
 public:
-    TempSensor(DataGenerator& data, int id) : data_(data), id_(id){}
+    TempSensor(int id,SensorData data) :id_(id) {
+        sensorbase_ = std::move(data);
+        sensorbase_.id_ = id_;
+        sensorbase_.unit_ = "C";
+    }
+
     void read() override;
 };
 class HumiditySensor : public Sensor {
 private:
-    DataGenerator& data_;
     int id_;
     std::string_view type_ = "Humiditysensor";
 public:
-    HumiditySensor(DataGenerator& data, int id) : data_(data), id_(id){}
+    HumiditySensor(int id, SensorData data) :id_(id) {
+        sensorbase_ = std::move(data);
+        sensorbase_.id_ = id_;
+        sensorbase_.unit_ = "%";
+    }
     void read() override;
 };
-class AirqualitySensor : public Sensor {
+class NoiseSensor : public Sensor {
 private:
-    DataGenerator& data_;
     int id_;
-    std::string_view type_ = "Airqualitysensor";
+    std::string_view type_ = "Noisesensor";
 public:
-    AirqualitySensor(DataGenerator& data, int id) : data_(data), id_(id){}
+    NoiseSensor(int id, SensorData data) :id_(id) {
+        sensorbase_ = std::move(data);
+        sensorbase_.id_ = id_;
+        sensorbase_.unit_ = "dB";
+    }
     void read() override;
 };
 
+
+
+struct SensorFactory {
+    static inline TempSensor makeTemp(DataGenerator& gen, int id) {
+        constexpr float t_min = 15.0f;
+        constexpr float t_max = 30.0f;
+        SensorData d = gen.generateSensorData(t_min, t_max);
+        return TempSensor{id, std::move(d)};
+    }
+    static inline HumiditySensor makeHumidity(DataGenerator& gen, int id) {
+        constexpr float h_min = 25.0f;
+        constexpr float h_max = 85.0f;
+        SensorData d = gen.generateSensorData(h_min,h_max);
+        return HumiditySensor{id, std::move(d)};
+    }
+    static inline NoiseSensor makeNoise(DataGenerator& gen, int id) {
+        constexpr float a_min = 15.0f;
+        constexpr float a_max = 100.0f;
+        SensorData d = gen.generateSensorData(a_min, a_max);
+        return NoiseSensor{id, std::move(d)};
+    }
+};
 
 
 #endif //ASSIGNMENT_2_SENSOR_H
