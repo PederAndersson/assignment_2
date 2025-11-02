@@ -5,9 +5,9 @@
 #include "sensor.h"
 
 struct SensorHub {
-    std::vector<TempSensor> temp_sensors;
-    std::vector<HumiditySensor> humidity_sensors;
-    std::vector<NoiseSensor> noise_sensors;
+    std::vector<TempSensor> temp_sensors = {};
+    std::vector<HumiditySensor> humidity_sensors = {};
+    std::vector<NoiseSensor> noise_sensors = {};
 };
 
 class Measurement {
@@ -17,9 +17,9 @@ private:
 public:
     explicit Measurement(std::vector<SensorHub> datastorage) : datastorage_(std::move(datastorage)) {}
     Measurement() = default;
-    void addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor);
-    void printAll(const std::vector<SensorHub>& data);
-    void readAll();
+    Measurement& addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor);
+    void printAll() const;
+
 };
 
 #endif //ASSIGNMENT_2_MEASUREMENT_H
