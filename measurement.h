@@ -12,7 +12,8 @@ struct SensorHub {
 
 class measurement {
 private:
-    std::vector<SensorHub> hub;
+    SensorHub hub;
+    std::vector<SensorHub> data_storage;
 };
 
 
