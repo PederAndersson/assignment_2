@@ -1,13 +1,25 @@
-//
-// Created by peder on 2025-10-30.
-//
-
 #ifndef ASSIGNMENT_2_MEASUREMENT_H
 #define ASSIGNMENT_2_MEASUREMENT_H
 
+#include <vector>
+#include "sensor.h"
 
-class measurement {
+struct SensorHub {
+    std::vector<TempSensor> temp_sensors = {};
+    std::vector<HumiditySensor> humidity_sensors = {};
+    std::vector<NoiseSensor> noise_sensors = {};
 };
 
+class Measurement {
+private:
+    std::vector<SensorHub> datastorage_;
+
+public:
+    explicit Measurement(std::vector<SensorHub> datastorage) : datastorage_(std::move(datastorage)) {}
+    Measurement() = default;
+    Measurement& addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor);
+    void printAll() const;
+
+};
 
 #endif //ASSIGNMENT_2_MEASUREMENT_H

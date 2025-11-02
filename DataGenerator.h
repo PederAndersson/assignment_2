@@ -4,9 +4,12 @@
 
 #ifndef ASSIGNMENT_2_UTILITY_H
 #define ASSIGNMENT_2_UTILITY_H
+#include "SensorData.h"
 
 
-class utility {
+class DataGenerator {
+public:
+    SensorData generateSensorData(float x,float y);
 };
 
 
