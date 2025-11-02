@@ -1,6 +1,5 @@
 #include <ctime>
 #include <iomanip>
-#include <random>
 #include <sstream>
 #include <algorithm>
 #include "DataGenerator.h"
@@ -11,10 +10,9 @@ SensorData DataGenerator::generateSensorData(float  x,float y) {
         std::swap(x, y);
     }
     SensorData sensor_values;
-    std::random_device rd;
-    std::mt19937 gen(rd());
+
     std::uniform_real_distribution<float> dist(x,y);
-    float sensor_value = dist(gen);
+    float sensor_value = dist(gen_);
     sensor_values.value_ = sensor_value;
 
     time_t time_stamp = time(nullptr);
