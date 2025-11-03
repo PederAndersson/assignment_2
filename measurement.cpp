@@ -37,3 +37,4 @@ void Measurement::readAll(TempSensor& temp_sensor, HumiditySensor& humidity_sens
     noise_sensor.read();
 }
 
+

@@ -3,6 +3,10 @@
 
 #include <vector>
 #include "sensor.h"
+struct Statistics {
+
+};
+
 
 struct SensorHub {
     std::vector<TempSensor> temp_sensors = {};
@@ -20,7 +24,6 @@ public:
     Measurement& addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor);
     void printAll() const;
     void readAll(TempSensor& temp_sensor, HumiditySensor& humidity_sensor, NoiseSensor& noise_sensor);
-
 };
 
 #endif //ASSIGNMENT_2_MEASUREMENT_H
