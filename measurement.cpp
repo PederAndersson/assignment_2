@@ -27,6 +27,7 @@ void Measurement::printAll() const {
         for (const auto& sensor : sensorhub.noise_sensors) {
             sensor.print();
         }
+        std::cout << "-----------------------------------------------------------\n";
     }
 }
 

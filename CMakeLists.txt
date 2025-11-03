@@ -11,4 +11,6 @@ add_executable(assignment_2 main.cpp
         DataGenerator.cpp
         DataGenerator.h
         SensorData.cpp
-        SensorData.h)
+        SensorData.h
+        Statistics.cpp
+        Statistics.h)

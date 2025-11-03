@@ -11,7 +11,7 @@ private:
 public:
     DataGenerator() : gen_(std::random_device{}()) {}
 
-    SensorData generateSensorData(float x,float y);
+    SensorData generateSensorData(float min,float max);
 };
 
 

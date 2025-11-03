@@ -5,13 +5,13 @@
 #include "DataGenerator.h"
 
 
-SensorData DataGenerator::generateSensorData(float  x,float y) {
-    if (x > y) {
-        std::swap(x, y);
+SensorData DataGenerator::generateSensorData(float  min,float max) {
+    if (min > max) {
+        std::swap(min, max);
     }
     SensorData sensor_values;
 
-    std::uniform_real_distribution<float> dist(x,y);
+    std::uniform_real_distribution<float> dist(min,max);
     float sensor_value = dist(gen_);
     sensor_values.value_ = sensor_value;
 
