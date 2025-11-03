@@ -17,8 +17,7 @@ int main() {
 
 
     data.printAll();
-
-
-
+    temp1.read();
+    temp1.print();
     return 0;
 }

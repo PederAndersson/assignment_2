@@ -18,6 +18,7 @@ protected:
 public:
     virtual ~Sensor() = default;
     virtual void print() const = 0;
+    virtual void read() = 0;
 };
 
 
@@ -33,6 +34,7 @@ public:
     }
 
     void print() const override ;
+    void read() override;
 };
 class HumiditySensor : public Sensor {
 private:
@@ -45,6 +47,7 @@ public:
         sensorbase_.unit_ = "%";
     }
     void print() const override;
+    void read() override;
 };
 class NoiseSensor : public Sensor {
 private:
@@ -57,27 +60,29 @@ public:
         sensorbase_.unit_ = "dB";
     }
     void print() const override;
+    void read() override;
 };
-
-
+constexpr float t_min = 15.0f;
+constexpr float t_max = 30.0f;
+constexpr float h_min = 25.0f;
+constexpr float h_max = 85.0f;
+constexpr float n_min = 15.0f;
+constexpr float n_max = 100.0f;
 
 struct SensorFactory {
     static TempSensor generateTempdata(DataGenerator& gen, int id) {
-        constexpr float t_min = 15.0f;
-        constexpr float t_max = 30.0f;
+
         SensorData d = gen.generateSensorData(t_min, t_max);
         return TempSensor{id, std::move(d)};
     }
     static HumiditySensor generateHumiditydata(DataGenerator& gen, int id) {
-        constexpr float h_min = 25.0f;
-        constexpr float h_max = 85.0f;
+
         SensorData d = gen.generateSensorData(h_min,h_max);
         return HumiditySensor{id, std::move(d)};
     }
     static NoiseSensor generateNoisedata(DataGenerator& gen, int id) {
-        constexpr float a_min = 15.0f;
-        constexpr float a_max = 100.0f;
-        SensorData d = gen.generateSensorData(a_min, a_max);
+
+        SensorData d = gen.generateSensorData(n_min, n_max);
         return NoiseSensor{id, std::move(d)};
     }
 };
