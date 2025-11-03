@@ -19,6 +19,7 @@ public:
     Measurement() = default;
     Measurement& addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor);
     void printAll() const;
+    void readAll(TempSensor& temp_sensor, HumiditySensor& humidity_sensor, NoiseSensor& noise_sensor);
 
 };
 

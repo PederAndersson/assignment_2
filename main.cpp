@@ -17,7 +17,8 @@ int main() {
 
 
     data.printAll();
-    temp1.read();
-    temp1.print();
+    data.readAll(temp1,humid1,noise1);
+    data.addMeasurement(temp1,humid1,noise1);
+    data.printAll();
     return 0;
 }

@@ -29,3 +29,10 @@ void Measurement::printAll() const {
         }
     }
 }
+
+void Measurement::readAll(TempSensor& temp_sensor, HumiditySensor& humidity_sensor, NoiseSensor& noise_sensor) {
+    temp_sensor.read();
+    humidity_sensor.read();
+    noise_sensor.read();
+}
+
