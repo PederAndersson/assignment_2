@@ -4,29 +4,26 @@
 #include "measurement.h"
 
 
-Measurement& Measurement::addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor) {
+void Measurement::addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor) {
 
-    SensorHub hub;
-
-    hub.temp_sensors.emplace_back(temp_sensor);
-    hub.humidity_sensors.emplace_back(humidity_sensor);
-    hub.noise_sensors.emplace_back(noise_sensor);
-    datastorage_.emplace_back(hub);
-    return *this;
+    temp_data_.emplace_back(temp_sensor);
+    humidity_data_.emplace_back(humidity_sensor);
+    noise_data_.emplace_back(noise_sensor);
 
 }
 
 void Measurement::printAll() const {
-    for (const auto& sensorhub : datastorage_) {
-        for (const auto& sensor : sensorhub.temp_sensors) {
+
+    for (const auto& sensor : temp_data_) {
         sensor.print();
-        }
-        for (const auto& sensor : sensorhub.humidity_sensors) {
-            sensor.print();
-        }
-        for (const auto& sensor : sensorhub.noise_sensors) {
-            sensor.print();
-        }
+        std::cout << "-----------------------------------------------------------\n";
+    }
+    for (const auto& sensor : humidity_data_) {
+        sensor.print();
+        std::cout << "-----------------------------------------------------------\n";
+    }
+    for (const auto& sensor : noise_data_) {
+        sensor.print();
         std::cout << "-----------------------------------------------------------\n";
     }
 }

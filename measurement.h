@@ -3,27 +3,23 @@
 
 #include <vector>
 #include "sensor.h"
-struct Statistics {
-
-};
 
 
-struct SensorHub {
-    std::vector<TempSensor> temp_sensors = {};
-    std::vector<HumiditySensor> humidity_sensors = {};
-    std::vector<NoiseSensor> noise_sensors = {};
-};
 
 class Measurement {
 private:
-    std::vector<SensorHub> datastorage_;
-
+    std::vector<TempSensor> temp_data_ = {};
+    std::vector<HumiditySensor> humidity_data_ = {};
+    std::vector<NoiseSensor> noise_data_ = {};
 public:
-    explicit Measurement(std::vector<SensorHub> datastorage) : datastorage_(std::move(datastorage)) {}
+    Measurement(std::vector<TempSensor> temp_data, std::vector<HumiditySensor> humidity_data, std::vector<NoiseSensor> noise_data) :
+    temp_data_(std::move(temp_data)), humidity_data_(std::move(humidity_data)), noise_data_(std::move(noise_data)) {}
     Measurement() = default;
-    Measurement& addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor);
+    void addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor);
     void printAll() const;
     void readAll(TempSensor& temp_sensor, HumiditySensor& humidity_sensor, NoiseSensor& noise_sensor);
+    int measurementCount();
+
 };
 
 #endif //ASSIGNMENT_2_MEASUREMENT_H
