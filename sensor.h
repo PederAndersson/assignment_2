@@ -25,12 +25,13 @@ public:
 class TempSensor : public Sensor{
 private:
     int id_;
-    std::string_view type_ = "Tempsensor";
+    inline static constexpr std::string_view type_ = "Temperature sensor";
+    inline static constexpr std::string_view unit_ = "Celsius";
 public:
     TempSensor(int id,SensorData data) :id_(id) {
         sensorbase_ = std::move(data);
         sensorbase_.id_ = id_;
-        sensorbase_.unit_ = "C";
+        sensorbase_.unit_ = unit_;
     }
 
     void print() const override ;
@@ -39,12 +40,13 @@ public:
 class HumiditySensor : public Sensor {
 private:
     int id_;
-    std::string_view type_ = "Humiditysensor";
+    inline static constexpr std::string_view  type_ = "Humidity sensor";
+    inline static constexpr std::string_view unit_ = "%";
 public:
     HumiditySensor(int id, SensorData data) :id_(id) {
         sensorbase_ = std::move(data);
         sensorbase_.id_ = id_;
-        sensorbase_.unit_ = "%";
+        sensorbase_.unit_ = unit_;
     }
     void print() const override;
     void read() override;
@@ -52,12 +54,13 @@ public:
 class NoiseSensor : public Sensor {
 private:
     int id_;
-    std::string_view type_ = "Noisesensor";
+    inline static constexpr std::string_view type_ = "Noise sensor";
+    inline static constexpr std::string_view unit_ = "dB";
 public:
     NoiseSensor(int id, SensorData data) :id_(id) {
         sensorbase_ = std::move(data);
         sensorbase_.id_ = id_;
-        sensorbase_.unit_ = "dB";
+        sensorbase_.unit_ = unit_;
     }
     void print() const override;
     void read() override;
@@ -70,17 +73,17 @@ constexpr float noise_min = 15.0f;
 constexpr float noise_max = 100.0f;
 
 struct SensorFactory {
-    static TempSensor generateTempdata(DataGenerator& gen, int id) {
+    static TempSensor generateTempData(DataGenerator& gen, int id) {
 
         SensorData d = gen.generateSensorData(temp_min, temp_max);
         return TempSensor{id, std::move(d)};
     }
-    static HumiditySensor generateHumiditydata(DataGenerator& gen, int id) {
+    static HumiditySensor generateHumidityData(DataGenerator& gen, int id) {
 
         SensorData d = gen.generateSensorData(humidity_min,humidity_max);
         return HumiditySensor{id, std::move(d)};
     }
-    static NoiseSensor generateNoisedata(DataGenerator& gen, int id) {
+    static NoiseSensor generateNoiseData(DataGenerator& gen, int id) {
 
         SensorData d = gen.generateSensorData(noise_min, noise_max);
         return NoiseSensor{id, std::move(d)};

@@ -1,5 +1,2 @@
-
+#include <iostream>
 #include "statistics.h"
-
-Statistics Statistics::calculateStatistics() {
-}

@@ -19,7 +19,9 @@ private:
 
 public:
     explicit Statistics(Stats stats) : stats_(stats){}
-    Statistics calculateStatistics();
+    Statistics() = default;
+
+
 };
 
 

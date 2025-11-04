@@ -3,22 +3,23 @@
 
 #include <vector>
 #include "sensor.h"
+struct Measurement {
+    TempSensor temp_sensor_;
+    HumiditySensor humidity_sensor_;
+    NoiseSensor noise_sensor_;
+
+    Measurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor) :
+    temp_sensor_(temp_sensor), humidity_sensor_(humidity_sensor), noise_sensor_(noise_sensor){}
+};
 
 
-
-class Measurement {
+class MeasurementStorage {
 private:
-    std::vector<TempSensor> temp_data_ = {};
-    std::vector<HumiditySensor> humidity_data_ = {};
-    std::vector<NoiseSensor> noise_data_ = {};
+    std::vector<Measurement> measurements_;
 public:
-    Measurement(std::vector<TempSensor> temp_data, std::vector<HumiditySensor> humidity_data, std::vector<NoiseSensor> noise_data) :
-    temp_data_(std::move(temp_data)), humidity_data_(std::move(humidity_data)), noise_data_(std::move(noise_data)) {}
-    Measurement() = default;
-    void addMeasurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor);
+
+    void addMeasurement(const Measurement& measurement);
     void printAll() const;
-    void readAll(TempSensor& temp_sensor, HumiditySensor& humidity_sensor, NoiseSensor& noise_sensor);
-    int measurementCount();
 
 };
 
