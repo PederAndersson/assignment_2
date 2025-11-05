@@ -36,8 +36,8 @@ public:
 
     void print() const override ;
     void read() override;
-    SensorData getSensorbase() const {return this->sensorbase_;}
-    std::string_view getSensortype() const {return this->type_;}
+    [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
+    [[nodiscard]] std::string_view getSensortype() const {return this->type_;}
 };
 class HumiditySensor : public Sensor {
 private:
@@ -52,8 +52,8 @@ public:
     }
     void print() const override;
     void read() override;
-    SensorData getSensorbase() const {return this->sensorbase_;}
-    std::string_view getSensortype() const {return this->type_;}
+    [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
+    [[nodiscard]] std::string_view getSensortype() const {return this->type_;}
 };
 class NoiseSensor : public Sensor {
 private:
@@ -68,8 +68,8 @@ public:
     }
     void print() const override;
     void read() override;
-    SensorData getSensorbase() const {return this->sensorbase_;}
-    std::string_view getSensortype() const {return this->type_;}
+    [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
+    [[nodiscard]] std::string_view getSensortype() const {return this->type_;}
 };
 constexpr float temp_min = 15.0f;
 constexpr float temp_max = 30.0f;

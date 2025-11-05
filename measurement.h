@@ -20,6 +20,7 @@ public:
 
     void addMeasurement(const Measurement& measurement);
     void printAll() const;
+    [[nodiscard]] std::vector<Measurement> getMeasurementStorage() const {return measurements_;}
 
 };
 

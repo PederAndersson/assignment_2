@@ -10,6 +10,7 @@ int main() {
 
     DataGenerator gen;
     MeasurementStorage measurement_storage;
+    Statistics stats;
     auto temp1 = SensorFactory::generateTempData(gen,1);
     auto humid1 = SensorFactory::generateHumidityData(gen,1);
     auto noise1 = SensorFactory::generateNoiseData(gen,1);
@@ -23,5 +24,7 @@ int main() {
     }
 
     measurement_storage.printAll();
+    stats.calculateStatistics(stats,measurement_storage);
+    stats.printStatistics();
     return 0;
 }
