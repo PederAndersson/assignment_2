@@ -1,6 +1,7 @@
 #ifndef ASSIGNMENT_2_MEASUREMENT_H
 #define ASSIGNMENT_2_MEASUREMENT_H
 
+#include <utility>
 #include <vector>
 #include "sensor.h"
 struct Measurement {
@@ -8,8 +9,8 @@ struct Measurement {
     HumiditySensor humidity_sensor_;
     NoiseSensor noise_sensor_;
 
-    Measurement(const TempSensor& temp_sensor, const HumiditySensor& humidity_sensor, const NoiseSensor& noise_sensor) :
-    temp_sensor_(temp_sensor), humidity_sensor_(humidity_sensor), noise_sensor_(noise_sensor){}
+    Measurement(TempSensor  temp_sensor,HumiditySensor humidity_sensor,NoiseSensor noise_sensor) :
+    temp_sensor_(std::move(temp_sensor)), humidity_sensor_(std::move(humidity_sensor)), noise_sensor_(std::move(noise_sensor)){}
 };
 
 

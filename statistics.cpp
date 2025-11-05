@@ -72,20 +72,22 @@ Statistics Statistics::calculateStatistics(Statistics& stats, const MeasurementS
 }
 
 void Statistics::printStatistics() const {
+
     using namespace std::string_literals;
 
+    const int n = 35;
     // Rubriker
     std::cout << std::left
-              << std::setw(25) << "Temperature stats"
-              << std::setw(25) << "Humidity stats"
-              << std::setw(25) << "Noise stats"
+              << std::setw(n) << "Temperature stats"
+              << std::setw(n) << "Humidity stats"
+              << std::setw(n) << "Noise stats"
               << "\n";
 
     // Antal mätningar
     std::cout << std::left
-              << std::setw(25) << ("Count: "s + std::to_string(static_cast<int>(stats_.temp_.number_measurements_)))
-              << std::setw(25) << ("Count: "s + std::to_string(static_cast<int>(stats_.humid_.number_measurements_)))
-              << std::setw(25) << ("Count: "s + std::to_string(static_cast<int>(stats_.noise_.number_measurements_)))
+              << std::setw(n) << ("Count: "s + std::to_string(static_cast<int>(stats_.temp_.number_measurements_)))
+              << std::setw(n) << ("Count: "s + std::to_string(static_cast<int>(stats_.humid_.number_measurements_)))
+              << std::setw(n) << ("Count: "s + std::to_string(static_cast<int>(stats_.noise_.number_measurements_)))
               << "\n";
 
     auto make_value_cell = [](float v, std::string_view label) {
@@ -97,39 +99,39 @@ void Statistics::printStatistics() const {
 
     // Medelvärde
     std::cout << std::left
-              << std::setw(25) << make_value_cell(stats_.temp_.mean_, "Mean: ")
-              << std::setw(25) << make_value_cell(stats_.humid_.mean_, "Mean: ")
-              << std::setw(25) << make_value_cell(stats_.noise_.mean_, "Mean: ")
+              << std::setw(n) << make_value_cell(stats_.temp_.mean_, "Mean: ")
+              << std::setw(n) << make_value_cell(stats_.humid_.mean_, "Mean: ")
+              << std::setw(n) << make_value_cell(stats_.noise_.mean_, "Mean: ")
               << "\n";
 
     // Min
     std::cout << std::left
-              << std::setw(25) << make_value_cell(stats_.temp_.min_, "Min: ")
-              << std::setw(25) << make_value_cell(stats_.humid_.min_, "Min: ")
-              << std::setw(25) << make_value_cell(stats_.noise_.min_, "Min: ")
+              << std::setw(n) << make_value_cell(stats_.temp_.min_, "Min: ")
+              << std::setw(n) << make_value_cell(stats_.humid_.min_, "Min: ")
+              << std::setw(n) << make_value_cell(stats_.noise_.min_, "Min: ")
               << "\n";
 
     // Max
     std::cout << std::left
-              << std::setw(25) << make_value_cell(stats_.temp_.max_, "Max: ")
-              << std::setw(25) << make_value_cell(stats_.humid_.max_, "Max: ")
-              << std::setw(25) << make_value_cell(stats_.noise_.max_, "Max: ")
+              << std::setw(n) << make_value_cell(stats_.temp_.max_, "Max: ")
+              << std::setw(n) << make_value_cell(stats_.humid_.max_, "Max: ")
+              << std::setw(n) << make_value_cell(stats_.noise_.max_, "Max: ")
               << "\n";
 
     // Varians
     std::cout << std::left
-              << std::setw(25) << make_value_cell(stats_.temp_.variance_, "Variance: ")
-              << std::setw(25) << make_value_cell(stats_.humid_.variance_, "Variance: ")
-              << std::setw(25) << make_value_cell(stats_.noise_.variance_, "Variance: ")
+              << std::setw(n) << make_value_cell(stats_.temp_.variance_, "Variance: ")
+              << std::setw(n) << make_value_cell(stats_.humid_.variance_, "Variance: ")
+              << std::setw(n) << make_value_cell(stats_.noise_.variance_, "Variance: ")
               << "\n";
 
     // Standardavvikelse
     std::cout << std::left
-              << std::setw(25) << make_value_cell(stats_.temp_.standard_dev_, "Std dev: ")
-              << std::setw(25) << make_value_cell(stats_.humid_.standard_dev_, "Std dev: ")
-              << std::setw(25) << make_value_cell(stats_.noise_.standard_dev_, "Std dev: ")
+              << std::setw(n) << make_value_cell(stats_.temp_.standard_dev_, "Std dev: ")
+              << std::setw(n) << make_value_cell(stats_.humid_.standard_dev_, "Std dev: ")
+              << std::setw(n) << make_value_cell(stats_.noise_.standard_dev_, "Std dev: ")
               << "\n";
 
     // Avgränsare
-    std::cout << std::string(75, '-') << "\n";
+    std::cout << std::string(100, '-') << "\n";
 }
