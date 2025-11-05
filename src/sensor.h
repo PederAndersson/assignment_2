@@ -25,51 +25,54 @@ public:
 class TempSensor : public Sensor{
 private:
     int id_;
-    inline static constexpr std::string_view type_ = "Temperature sensor";
-    inline static constexpr std::string_view unit_ = "Celsius";
+    inline static constexpr std::string_view temp_type_ = "Temperature sensor";
+    inline static constexpr std::string_view temp_unit_ = "Celsius";
 public:
     TempSensor(int id,SensorData data) :id_(id) {
         sensorbase_ = std::move(data);
         sensorbase_.id_ = id_;
-        sensorbase_.unit_ = unit_;
+        sensorbase_.unit_ = temp_unit_;
     }
 
     void print() const override ;
     void read() override;
     [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
-    [[nodiscard]] std::string_view getSensortype() const {return this->type_;}
+    static constexpr std::string_view getStaticType() { return temp_type_; }
+    static constexpr std::string_view getStaticUnit() { return temp_unit_; }
 };
 class HumiditySensor : public Sensor {
 private:
     int id_;
-    inline static constexpr std::string_view type_ = "Humidity sensor";
-    inline static constexpr std::string_view unit_ = "%";
+    inline static constexpr std::string_view humid_type_ = "Humidity sensor";
+    inline static constexpr std::string_view humid_unit_ = "%";
 public:
     HumiditySensor(int id, SensorData data) :id_(id) {
         sensorbase_ = std::move(data);
         sensorbase_.id_ = id_;
-        sensorbase_.unit_ = unit_;
+        sensorbase_.unit_ = humid_unit_;
     }
     void print() const override;
     void read() override;
     [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
-    [[nodiscard]] std::string_view getSensortype() const {return this->type_;}
+    static constexpr std::string_view getStaticType() { return humid_type_; }
+    static constexpr std::string_view getStaticUnit() { return humid_unit_; }
 };
 class NoiseSensor : public Sensor {
 private:
     int id_;
-    inline static constexpr std::string_view type_ = "Noise sensor";
-    inline static constexpr std::string_view unit_ = "dB";
+    inline static constexpr std::string_view noise_type_ = "Noise sensor";
+    inline static constexpr std::string_view noise_unit_ = "dB";
 public:
     NoiseSensor(int id, SensorData data) :id_(id) {
         sensorbase_ = std::move(data);
         sensorbase_.id_ = id_;
-        sensorbase_.unit_ = unit_;
+        sensorbase_.unit_ = noise_unit_;
     }
     void print() const override;
     void read() override;
     [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
-    [[nodiscard]] std::string_view getSensortype() const {return this->type_;}
+    static constexpr std::string_view getStaticType() { return noise_type_; }
+    static constexpr std::string_view getStaticUnit() { return noise_unit_; }
 };
 constexpr float temp_min = 15.0f;
 constexpr float temp_max = 30.0f;

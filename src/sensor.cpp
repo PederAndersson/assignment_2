@@ -4,7 +4,7 @@
 
 
 void TempSensor::print() const {
-    std::cout   << "Sensor type: " << type_  << "\n"
+    std::cout   << "Sensor type: " << temp_type_  << "\n"
                 << "Id: " << sensorbase_.id_ << "\n"
                 << "Value: " << sensorbase_.value_<< " " << sensorbase_.unit_ << "\n"
                 << "Time: " << sensorbase_.timestamp_ << "\n";
@@ -17,7 +17,7 @@ void TempSensor::read() {
 
 
 void HumiditySensor::print() const {
-    std::cout   << "Sensor type: " << type_  << "\n"
+    std::cout   << "Sensor type: " << humid_type_  << "\n"
                  << "Id: " << sensorbase_.id_ << "\n"
                  << "Value: " << sensorbase_.value_<< " " << sensorbase_.unit_ << "\n"
                  << "Time: " << sensorbase_.timestamp_ << "\n";
@@ -28,7 +28,7 @@ void HumiditySensor::read() {
 }
 
 void NoiseSensor::print() const {
-    std::cout   << "Sensor type: " << type_  << "\n"
+    std::cout   << "Sensor type: " << noise_type_  << "\n"
                  << "Id: " << sensorbase_.id_ << "\n"
                  << "Value: " << sensorbase_.value_<< " " << sensorbase_.unit_ << "\n"
                  << "Time: " << sensorbase_.timestamp_ << "\n";

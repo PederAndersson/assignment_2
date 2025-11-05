@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <vector>
+
 #include "sensor.h"
 struct Measurement {
     TempSensor temp_sensor_;
