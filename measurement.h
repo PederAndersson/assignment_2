@@ -22,6 +22,9 @@ public:
     void addMeasurement(const Measurement& measurement);
     void printAll() const;
     [[nodiscard]] std::vector<Measurement> getMeasurementStorage() const {return measurements_;}
+    static void writeToFile(const std::string& filename, const MeasurementStorage& data);
+    static void readFromFile(const std::string& filename, MeasurementStorage& data);
+    static void clearFile(const std::string& filename);
 
 };
 

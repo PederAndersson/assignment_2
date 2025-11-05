@@ -42,7 +42,7 @@ public:
 class HumiditySensor : public Sensor {
 private:
     int id_;
-    inline static constexpr std::string_view  type_ = "Humidity sensor";
+    inline static constexpr std::string_view type_ = "Humidity sensor";
     inline static constexpr std::string_view unit_ = "%";
 public:
     HumiditySensor(int id, SensorData data) :id_(id) {
