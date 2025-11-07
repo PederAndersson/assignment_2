@@ -11,7 +11,7 @@ void MeasurementStorage::addMeasurement(const Measurement &measurement) {
     this->measurements_.emplace_back(measurement);
 }
 
-void MeasurementStorage::printAllSensors() const {
+void MeasurementStorage::printAllSensors() const { // code for formatting the how the printout looks.
     using namespace std::string_literals;
 
     for (const auto& sensor : measurements_) {
@@ -58,7 +58,7 @@ void MeasurementStorage::printAllSensors() const {
     }
 }
 void MeasurementStorage::readAllSensors(TempSensor &T, HumiditySensor &H, NoiseSensor &N) {
-    T.read();
+    T.read(); // calls the read functions for all sensors.
     H.read();
     N.read();
 }
@@ -67,14 +67,14 @@ void MeasurementStorage::readAllSensors(TempSensor &T, HumiditySensor &H, NoiseS
 void MeasurementStorage::writeToFile(const std::string& filename, const MeasurementStorage& data)  {
     std::ofstream myFile;
     myFile.open(filename,std::ios::app | std::ios::out);
-    if (!myFile.is_open()) {
+    if (!myFile.is_open()) { //checks is you have the righ filename
         std::cerr << "Error" << filename << " not found";
         return;
     }
-    if (!std::filesystem::exists(filename) || std::filesystem::file_size(filename) == 0) {
+    if (!std::filesystem::exists(filename) || std::filesystem::file_size(filename) == 0) { //writes header if the file is empty
         myFile << "SENSORTYPE" << "," << "ID" << "," << "VALUE" << "," << "TIMESTAMP" << "\n";
     }
-    if (!data.getMeasurementStorage().empty()) {
+    if (!data.getMeasurementStorage().empty()) { // checks if the vector is empty
         for (const auto& sensor : data.getMeasurementStorage()) {
             myFile  << TempSensor::getStaticType() << "," << sensor.temp_sensor_.getSensorbase().id_ << ","
                     << sensor.temp_sensor_.getSensorbase().value_ << "," << sensor.temp_sensor_.getSensorbase().timestamp_ << "\n";
@@ -126,13 +126,13 @@ void MeasurementStorage::readFromFile(const std::string& filename, MeasurementSt
         std::getline(ss, timestampStr, ',');
 
         try {
-            int id = std::stoi(idStr);
-            double value = std::stod(valueStr);
+            int id = std::stoi(idStr); // change string to int
+            double value = std::stod(valueStr); // change string to double
 
             SensorData sensorData;
             sensorData.id_ = id;
             sensorData.timestamp_ = timestampStr;
-            sensorData.value_ = static_cast<float>(value);
+            sensorData.value_ = static_cast<float>(value); // chang double to float to match the sensor
 
             // sort with a constexpr variable to prevent misspelling
             if (sensorType == TempSensor::getStaticType()) {
@@ -160,8 +160,9 @@ void MeasurementStorage::readFromFile(const std::string& filename, MeasurementSt
 
     myFile.close();
 
-    // Skapa Measurement objekt (du behöver anpassa detta beroende på hur dina sensorer är organiserade)
-    // Om varje rad representerar en komplett measurement:
+    // Create Measurement objects (you need to adapt this depending on how your sensors are organized)
+    // If each row represents a complete measurement:
+
     for (size_t i = 0; i < std::min({tempData.size(), humidityData.size(), noiseData.size()}); ++i) {
         TempSensor tempSensor(tempData[i].id_, tempData[i]);
         HumiditySensor humiditySensor(humidityData[i].id_, humidityData[i]);

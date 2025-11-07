@@ -12,8 +12,8 @@
 namespace fs = std::filesystem;
 
 int main() {
-    DataGenerator gen;
-    MeasurementStorage measurement_storage;
+    DataGenerator gen; //generator for data
+    MeasurementStorage measurement_storage; //vector for sensor data
     Statistics stats;
     auto temp1 = SensorFactory::generateTempData(gen,1);
     auto humid1 = SensorFactory::generateHumidityData(gen,1);
@@ -27,7 +27,7 @@ int main() {
         switch (Utils::validInput()) {
             case 1: {
                 std::cout << "Read sensor and collect the current value.\n";
-                measurement_storage.readAllSensors(temp1,humid1,noise1);
+                MeasurementStorage::readAllSensors(temp1,humid1,noise1);
                 Measurement measurement(temp1,humid1,noise1);
                 measurement_storage.addMeasurement(measurement);
                 break;

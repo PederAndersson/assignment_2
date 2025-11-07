@@ -11,7 +11,7 @@
 
 
 
-class Sensor {
+class Sensor { //abstract base class
 protected:
     SensorData sensorbase_;
     DataGenerator gen_;
@@ -74,6 +74,7 @@ public:
     static constexpr std::string_view getStaticType() { return noise_type_; }
     static constexpr std::string_view getStaticUnit() { return noise_unit_; }
 };
+// set variables for the different sensors for the intervall in which they generate measurements
 constexpr float temp_min = 15.0f;
 constexpr float temp_max = 30.0f;
 constexpr float humidity_min = 25.0f;
@@ -81,6 +82,7 @@ constexpr float humidity_max = 85.0f;
 constexpr float noise_min = 15.0f;
 constexpr float noise_max = 100.0f;
 
+//"factory" that lets you generate data upon initialization
 struct SensorFactory {
     static TempSensor generateTempData(DataGenerator& gen, int id) {
 

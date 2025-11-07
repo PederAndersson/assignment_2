@@ -9,7 +9,7 @@ class DataGenerator {
 private:
     std::mt19937 gen_;
 public:
-    DataGenerator() : gen_(std::random_device{}()) {}
+    DataGenerator() : gen_(std::random_device{}()) {} // constructor that seeds mersenne-twister engine
 
     SensorData generateSensorData(float min,float max);
 };

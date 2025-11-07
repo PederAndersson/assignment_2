@@ -12,7 +12,7 @@ Statistics Statistics::calculateStatistics(Statistics& stats, const MeasurementS
     float temp_sum = 0;
     float humid_sum = 0;
     float noise_sum = 0;
-    stats_.temp_.number_measurements_ = data.getMeasurementStorage().size();
+    stats_.temp_.number_measurements_ = data.getMeasurementStorage().size(); //checks size for the number of measurements
     stats_.humid_.number_measurements_ = data.getMeasurementStorage().size();
     stats_.noise_.number_measurements_ = data.getMeasurementStorage().size();
     for (auto& sensor :  data.getMeasurementStorage()) {
@@ -20,7 +20,7 @@ Statistics Statistics::calculateStatistics(Statistics& stats, const MeasurementS
         humid_sum += sensor.humidity_sensor_.getSensorbase().value_;
         noise_sum += sensor.noise_sensor_.getSensorbase().value_;
     }
-    stats_.temp_.mean_ = temp_sum/stats_.temp_.number_measurements_;
+    stats_.temp_.mean_ = temp_sum/stats_.temp_.number_measurements_; // calculates the mean
     stats_.humid_.mean_ = humid_sum/stats_.humid_.number_measurements_;
     stats_.noise_.mean_ = noise_sum/stats_.noise_.number_measurements_;
 
@@ -35,7 +35,7 @@ Statistics Statistics::calculateStatistics(Statistics& stats, const MeasurementS
         const float noise_diff = value.noise_sensor_.getSensorbase().value_ - stats_.noise_.mean_;
         noise_squarediff += noise_diff*noise_diff;
     }
-    stats_.temp_.variance_ = temp_squarediff/data.getMeasurementStorage().size();
+    stats_.temp_.variance_ = temp_squarediff/data.getMeasurementStorage().size(); // calculates the variance
     stats_.humid_.variance_ = humid_squarediff/data.getMeasurementStorage().size();
     stats_.noise_.variance_ = noise_squarediff/data.getMeasurementStorage().size();
     stats_.temp_.standard_dev_ = sqrt(stats_.temp_.variance_);
@@ -43,19 +43,22 @@ Statistics Statistics::calculateStatistics(Statistics& stats, const MeasurementS
     stats_.noise_.standard_dev_ = sqrt(stats_.noise_.variance_);
 
     const auto &storage = data.getMeasurementStorage();
-
+    // Reusable function to find min/max values from measurements
+    // getValue: function to extract the value we want to compare
+    // outMin/outMax: where to store the results
     auto findMinMax = [&](auto getValue, auto &outMin, auto &outMax) {
         if (storage.empty()) return;
-
+        // Find both min and max in a single pass through the data
         auto [min_it, max_it] = std::minmax_element(
             storage.begin(), storage.end(),
             [&](const Measurement &a, const Measurement &b) {
                 return getValue(a) < getValue(b);
             });
-
+        // Extract the actual values from the found elements
         outMin = getValue(*min_it);
         outMax = getValue(*max_it);
     };
+    //find the min/max values for the sensors
     findMinMax(
     [](const Measurement &m) { return m.temp_sensor_.getSensorbase().value_; },
     stats_.temp_.min_, stats_.temp_.max_);
@@ -72,7 +75,7 @@ Statistics Statistics::calculateStatistics(Statistics& stats, const MeasurementS
     return stats;
 }
 
-void Statistics::printStatistics() const {
+void Statistics::printStatistics() const { // prints the statistics using the same formatting as the sensors
 
     using namespace std::string_literals;
 

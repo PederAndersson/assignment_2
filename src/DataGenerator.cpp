@@ -6,7 +6,7 @@
 
 
 SensorData DataGenerator::generateSensorData(float  min,float max) {
-    if (min > max) {
+    if (min > max) { // simple failsafe incase you input the numbers in the wrong order
         std::swap(min, max);
     }
     SensorData sensor_values;
@@ -15,7 +15,7 @@ SensorData DataGenerator::generateSensorData(float  min,float max) {
     float sensor_value = dist(gen_);
     sensor_values.value_ = sensor_value;
 
-    time_t time_stamp = time(nullptr);
+    time_t time_stamp = time(nullptr); // gets you the local time.
     tm datetime = *localtime(&time_stamp);
 
     std::ostringstream oss;
