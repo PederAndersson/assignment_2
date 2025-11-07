@@ -21,8 +21,8 @@ Statistics Statistics::calculateStatistics(Statistics& stats, const MeasurementS
         noise_sum += sensor.noise_sensor_.getSensorbase().value_;
     }
     stats_.temp_.mean_ = temp_sum/stats_.temp_.number_measurements_;
-    stats_.humid_.mean_ = humid_sum/stats_.temp_.number_measurements_;
-    stats_.noise_.mean_ = noise_sum/stats_.temp_.number_measurements_;
+    stats_.humid_.mean_ = humid_sum/stats_.humid_.number_measurements_;
+    stats_.noise_.mean_ = noise_sum/stats_.noise_.number_measurements_;
 
     float temp_squarediff = 0.0;
     float humid_squarediff = 0.0;
@@ -30,9 +30,9 @@ Statistics Statistics::calculateStatistics(Statistics& stats, const MeasurementS
     for (auto& value : data.getMeasurementStorage()) {
         const float temp_diff = value.temp_sensor_.getSensorbase().value_ - stats_.temp_.mean_;
         temp_squarediff += temp_diff*temp_diff;
-        const float humid_diff = value.temp_sensor_.getSensorbase().value_ - stats_.temp_.mean_;
+        const float humid_diff = value.humidity_sensor_.getSensorbase().value_ - stats_.humid_.mean_;
         humid_squarediff += humid_diff*humid_diff;
-        const float noise_diff = value.temp_sensor_.getSensorbase().value_ - stats_.temp_.mean_;
+        const float noise_diff = value.noise_sensor_.getSensorbase().value_ - stats_.noise_.mean_;
         noise_squarediff += noise_diff*noise_diff;
     }
     stats_.temp_.variance_ = temp_squarediff/data.getMeasurementStorage().size();

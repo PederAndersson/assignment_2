@@ -21,7 +21,8 @@ private:
 public:
 
     void addMeasurement(const Measurement& measurement);
-    void printAll() const;
+    void printAllSensors() const;
+    void readAllSensors(TempSensor& T,HumiditySensor& H,NoiseSensor& N);
     [[nodiscard]] std::vector<Measurement> getMeasurementStorage() const {return measurements_;}
     static void writeToFile(const std::string& filename, const MeasurementStorage& data);
     static void readFromFile(const std::string& filename, MeasurementStorage& data);

@@ -11,7 +11,9 @@ class UserInterface {
 private:
 
 public:
-    void printMenu() const;
+    static void printMenu();
+    static void printFileReadingMenu();
+
 
 };
 

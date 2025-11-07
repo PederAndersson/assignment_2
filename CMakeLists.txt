@@ -16,4 +16,6 @@ add_executable(assignment_2 main.cpp
         src/statistics.h
         src/UserInterface.cpp
         src/UserInterface.h
+        src/Utils.cpp
+        src/Utils.h
 )

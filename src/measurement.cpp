@@ -11,7 +11,7 @@ void MeasurementStorage::addMeasurement(const Measurement &measurement) {
     this->measurements_.emplace_back(measurement);
 }
 
-void MeasurementStorage::printAll() const {
+void MeasurementStorage::printAllSensors() const {
     using namespace std::string_literals;
 
     for (const auto& sensor : measurements_) {
@@ -20,7 +20,7 @@ void MeasurementStorage::printAll() const {
         const auto& n = sensor.noise_sensor_.getSensorbase();
 
         constexpr int n1 = 35;
-        // Rubriker
+        // Headlines
         std::cout << std::left
         << std::setw(n1) << ("Sensor type: "s + std::string(TempSensor::getStaticType()))
         << std::setw(n1) << ("Sensor type: "s + std::string(HumiditySensor::getStaticType()))
@@ -33,12 +33,12 @@ void MeasurementStorage::printAll() const {
                   << std::setw(n1) << ("Id: " + std::to_string(h.id_))
                   << std::setw(n1) << ("Id: " + std::to_string(n.id_))
                   << "\n";
-
+        //Value and unit
         auto make_value_cell = [](double v, std::string_view unit) {
             std::ostringstream os;
             os << std::fixed << std::setprecision(2)
                << "Value: " << v << ' ' << unit;
-            return os.str();           // färdig formatterad cell
+            return os.str();
         };
 
         std::cout << std::left
@@ -53,10 +53,16 @@ void MeasurementStorage::printAll() const {
                   << std::setw(n1) << ("Time: " + n.timestamp_)
                   << "\n";
 
-        // Avgränsare mellan mätningar
+        // Deleniation
         std::cout << std::string(100, '-') << "\n";
     }
 }
+void MeasurementStorage::readAllSensors(TempSensor &T, HumiditySensor &H, NoiseSensor &N) {
+    T.read();
+    H.read();
+    N.read();
+}
+
 
 void MeasurementStorage::writeToFile(const std::string& filename, const MeasurementStorage& data)  {
     std::ofstream myFile;
