@@ -62,6 +62,7 @@ int main() {
                         break;
                     }
                 }
+                break;
             }
             case 5: {
                 std::cout << "Clears the csv file.\n";
