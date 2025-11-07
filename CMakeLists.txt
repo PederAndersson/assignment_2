@@ -4,11 +4,18 @@ project(assignment_2)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(assignment_2 main.cpp
-        sensor.cpp
-        sensor.h
-        measurement.cpp
-        measurement.h
-        DataGenerator.cpp
-        DataGenerator.h
-        SensorData.cpp
-        SensorData.h)
+        src/sensor.cpp
+        src/sensor.h
+        src/measurement.cpp
+        src/measurement.h
+        src/DataGenerator.cpp
+        src/DataGenerator.h
+        src/SensorData.cpp
+        src/SensorData.h
+        src/statistics.cpp
+        src/statistics.h
+        src/UserInterface.cpp
+        src/UserInterface.h
+        src/Utils.cpp
+        src/Utils.h
+)
