@@ -10,8 +10,9 @@ private:
     std::mt19937 gen_;
 public:
     DataGenerator() : gen_(std::random_device{}()) {} // constructor that seeds mersenne-twister engine
+    static std::string generateTimeStamp();
+    float generateSensorData(float min,float max);
 
-    SensorData generateSensorData(float min,float max);
 };
 
 

@@ -85,19 +85,22 @@ constexpr float noise_max = 100.0f;
 //"factory" that lets you generate data upon initialization
 struct SensorFactory {
     static TempSensor generateTempData(DataGenerator& gen, int id) {
-
-        SensorData d = gen.generateSensorData(temp_min, temp_max);
-        return TempSensor{id, std::move(d)};
+        SensorData temp;
+        temp.value_ = gen.generateSensorData(temp_min, temp_max);
+        temp.timestamp_ = DataGenerator::generateTimeStamp();
+        return TempSensor{id, std::move(temp)};
     }
     static HumiditySensor generateHumidityData(DataGenerator& gen, int id) {
-
-        SensorData d = gen.generateSensorData(humidity_min,humidity_max);
-        return HumiditySensor{id, std::move(d)};
+        SensorData humidity;
+        humidity.value_ = gen.generateSensorData(humidity_min,humidity_max);
+        humidity.timestamp_ = DataGenerator::generateTimeStamp();
+        return HumiditySensor{id, std::move(humidity)};
     }
     static NoiseSensor generateNoiseData(DataGenerator& gen, int id) {
-
-        SensorData d = gen.generateSensorData(noise_min, noise_max);
-        return NoiseSensor{id, std::move(d)};
+        SensorData noise;
+        noise.value_ = gen.generateSensorData(noise_min, noise_max);
+        noise.timestamp_ = DataGenerator::generateTimeStamp();
+        return NoiseSensor{id, std::move(noise)};
     }
 };
 

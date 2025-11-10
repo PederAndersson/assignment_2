@@ -11,7 +11,7 @@ void TempSensor::print() const {
 }
 void TempSensor::read() {
 
-    this->sensorbase_ = gen_.generateSensorData(temp_min,temp_max);
+    this->sensorbase_.value_ = gen_.generateSensorData(temp_min,temp_max);
     this->sensorbase_.id_ = id_;
 }
 
@@ -23,7 +23,7 @@ void HumiditySensor::print() const {
                  << "Time: " << sensorbase_.timestamp_ << "\n";
 }
 void HumiditySensor::read() {
-    this->sensorbase_ = gen_.generateSensorData(humidity_min,humidity_max);
+    this->sensorbase_.value_ = gen_.generateSensorData(humidity_min,humidity_max);
     this->sensorbase_.id_ = id_;
 }
 
@@ -34,7 +34,7 @@ void NoiseSensor::print() const {
                  << "Time: " << sensorbase_.timestamp_ << "\n";
 }
 void NoiseSensor::read() {
-    this->sensorbase_ = gen_.generateSensorData(noise_min,noise_max);
+    this->sensorbase_.value_ = gen_.generateSensorData(noise_min,noise_max);
     this->sensorbase_.id_ = id_;
 }
 
