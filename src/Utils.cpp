@@ -5,17 +5,30 @@
 #include "SensorData.h"
 
 int Utils::validInput() {
-    int y;
+    int input;
     while (true) {
-        if (!(std::cin >> y)) {
+        if (!(std::cin >> input)) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
             std::cout << "Please input a number instead.\n";
         } else {
-            return y;
+            return input;
         }
     }
 }
+float Utils::validFloatInput() {
+    float input;
+    while (true) {
+        if (!(std::cin >> input)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+            std::cout << "Please input a number instead.\n";
+        } else {
+            return input;
+        }
+    }
+}
+
 
 std::string Utils::sensorTypeToString(SensorType type)  {
     switch (type) {

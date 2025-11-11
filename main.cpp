@@ -15,7 +15,6 @@ int main() {
     TempConfig tcgf;
     HumidConfig hcfg;
     NoiseConfig ncfg;
-    DataGenerator gen; //generator for data
     MeasurementStorage measurement_storage; //vector for sensor data
     Statistics stats;
     TempSensor temp (1,tcgf);

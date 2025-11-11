@@ -8,6 +8,7 @@
 class Utils {
 public:
     static int validInput();
+    static float validFloatInput();
     static std::string sensorTypeToString(SensorType type);
 };
 

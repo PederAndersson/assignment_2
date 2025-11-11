@@ -19,6 +19,8 @@ public:
     virtual ~Sensor() = default;
     virtual void print() const = 0;
     virtual void read() = 0;
+    virtual void setThreshold() = 0;
+    virtual void setInterval() = 0;
 };
 
 
@@ -41,6 +43,8 @@ public:
 
     void print() const override ;
     void read() override;
+    void setThreshold() override;
+    void setInterval() override;
     [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
 };
 class HumiditySensor : public Sensor {
@@ -59,6 +63,9 @@ public:
 
     void print() const override;
     void read() override;
+    void setThreshold() override;
+    void setInterval() override;
+
     [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
 };
 class NoiseSensor : public Sensor {
@@ -77,6 +84,8 @@ public:
 
     void print() const override;
     void read() override;
+    void setThreshold() override;
+    void setInterval() override;
     [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
 };
 
