@@ -1,17 +1,18 @@
 
 #include <iomanip>
 #include <iostream>
-#include "measurement.h"
+#include <fstream>
 #include <algorithm>
 #include <filesystem>
-#include <fstream>
 
+#include "measurement.h"
+#include "Utils.h"
 
 void MeasurementStorage::addMeasurement(const Measurement &measurement) {
     this->measurements_.emplace_back(measurement);
 }
 
-void MeasurementStorage::printAllSensors() const { // code for formatting the how the printout looks.
+void MeasurementStorage::printAllSensors() const { // code for formatting the printout looks.
     using namespace std::string_literals;
 
     for (const auto& sensor : measurements_) {
@@ -22,9 +23,9 @@ void MeasurementStorage::printAllSensors() const { // code for formatting the ho
         constexpr int n1 = 35;
         // Headlines
         std::cout << std::left
-        << std::setw(n1) << ("Sensor type: "s + std::string(TempSensor::getStaticType()))
-        << std::setw(n1) << ("Sensor type: "s + std::string(HumiditySensor::getStaticType()))
-        << std::setw(n1) << ("Sensor type: "s + std::string(NoiseSensor::getStaticType()))
+        << std::setw(n1) << ("Sensor type: "s + Utils::sensorTypeToString(SensorType::TemperatureSensor))
+        << std::setw(n1) << ("Sensor type: "s + Utils::sensorTypeToString(SensorType::HumiditySensor))
+        << std::setw(n1) << ("Sensor type: "s + Utils::sensorTypeToString(SensorType::NoiseSensor))
                   << "\n";
 
         // Id
@@ -53,7 +54,7 @@ void MeasurementStorage::printAllSensors() const { // code for formatting the ho
                   << std::setw(n1) << ("Time: " + n.timestamp_)
                   << "\n";
 
-        // Deleniation
+        // Delineation
         std::cout << std::string(100, '-') << "\n";
     }
 }
@@ -67,7 +68,7 @@ void MeasurementStorage::readAllSensors(TempSensor &T, HumiditySensor &H, NoiseS
 void MeasurementStorage::writeToFile(const std::string& filename, const MeasurementStorage& data)  {
     std::ofstream myFile;
     myFile.open(filename,std::ios::app | std::ios::out);
-    if (!myFile.is_open()) { //checks is you have the righ filename
+    if (!myFile.is_open()) { //checks is you have the right filename
         std::cerr << "Error" << filename << " not found";
         return;
     }
@@ -76,11 +77,11 @@ void MeasurementStorage::writeToFile(const std::string& filename, const Measurem
     }
     if (!data.getMeasurementStorage().empty()) { // checks if the vector is empty
         for (const auto& sensor : data.getMeasurementStorage()) {
-            myFile  << TempSensor::getStaticType() << "," << sensor.temp_sensor_.getSensorbase().id_ << ","
+            myFile  << Utils::sensorTypeToString(SensorType::TemperatureSensor) << "," << sensor.temp_sensor_.getSensorbase().id_ << ","
                     << sensor.temp_sensor_.getSensorbase().value_ << "," << sensor.temp_sensor_.getSensorbase().timestamp_ << "\n";
-            myFile  << HumiditySensor::getStaticType() << "," << sensor.humidity_sensor_.getSensorbase().id_ << ","
+            myFile  << Utils::sensorTypeToString(SensorType::HumiditySensor) << "," << sensor.humidity_sensor_.getSensorbase().id_ << ","
                     << sensor.humidity_sensor_.getSensorbase().value_ << "," << sensor.humidity_sensor_.getSensorbase().timestamp_ << "\n";
-            myFile  << NoiseSensor::getStaticType() << "," << sensor.noise_sensor_.getSensorbase().id_ << ","
+            myFile  << Utils::sensorTypeToString(SensorType::NoiseSensor) << "," << sensor.noise_sensor_.getSensorbase().id_ << ","
                     << sensor.noise_sensor_.getSensorbase().value_ << "," << sensor.noise_sensor_.getSensorbase().timestamp_ << "\n";
         }
     } else {
@@ -134,17 +135,20 @@ void MeasurementStorage::readFromFile(const std::string& filename, MeasurementSt
             sensorData.timestamp_ = timestampStr;
             sensorData.value_ = static_cast<float>(value); // chang double to float to match the sensor
 
-            // sort with a constexpr variable to prevent misspelling
-            if (sensorType == TempSensor::getStaticType()) {
-                sensorData.unit_ = TempSensor::getStaticUnit();
+            // sort with enum to prevent misspelling
+            if (sensorType == Utils::sensorTypeToString(SensorType::TemperatureSensor)) {
+                TempSensor temp_sensor;
+                sensorData.unit_ = temp_sensor.getSensorbase().unit_;
                 tempData.push_back(sensorData);
             }
-            else if (sensorType == HumiditySensor::getStaticType()) {
-                sensorData.unit_ = HumiditySensor::getStaticUnit();
+            else if (sensorType == Utils::sensorTypeToString(SensorType::HumiditySensor)) {
+                HumiditySensor humidity_sensor;
+                sensorData.unit_ = humidity_sensor.getSensorbase().unit_;
                 humidityData.push_back(sensorData);
             }
-            else if (sensorType == NoiseSensor::getStaticType()) {
-                sensorData.unit_ = NoiseSensor::getStaticType();
+            else if (sensorType == Utils::sensorTypeToString(SensorType::NoiseSensor)) {
+                NoiseSensor noise_sensor;
+                sensorData.unit_ = noise_sensor.getSensorbase().unit_;
                 noiseData.push_back(sensorData);
             }
             else {

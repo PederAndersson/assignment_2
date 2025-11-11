@@ -1,8 +1,8 @@
-#include "Utils.h"
-
 #include <iostream>
 #include <limits>
 
+#include "Utils.h"
+#include "SensorData.h"
 
 int Utils::validInput() {
     int y;
@@ -16,4 +16,18 @@ int Utils::validInput() {
         }
     }
 }
+
+std::string Utils::sensorTypeToString(SensorType type)  {
+    switch (type) {
+        case SensorType::TemperatureSensor:
+            return "Temperature sensor";
+        case SensorType::HumiditySensor:
+            return "Humidity sensor";
+        case SensorType::NoiseSensor:
+            return "Noise sensor";
+        default:
+            return "Unknown";
+    }
+}
+
 

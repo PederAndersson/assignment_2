@@ -12,12 +12,15 @@
 namespace fs = std::filesystem;
 
 int main() {
+    TempConfig tcgf;
+    HumidConfig hcfg;
+    NoiseConfig ncfg;
     DataGenerator gen; //generator for data
     MeasurementStorage measurement_storage; //vector for sensor data
     Statistics stats;
-    auto temp1 = SensorFactory::generateTempData(gen,1);
-    auto humid1 = SensorFactory::generateHumidityData(gen,1);
-    auto noise1 = SensorFactory::generateNoiseData(gen,1);
+    TempSensor temp (1,tcgf);
+    HumiditySensor humid (1,hcfg);
+    NoiseSensor noise(1,ncfg);
     std::cout << std::fixed << std::setprecision(2);
     const std::string filename = "Sensor_data.csv";
     bool check = true;
@@ -27,13 +30,13 @@ int main() {
         switch (Utils::validInput()) {
             case 1: {
                 std::cout << "Read sensor and collect the current value.\n";
-                MeasurementStorage::readAllSensors(temp1,humid1,noise1);
-                Measurement measurement(temp1,humid1,noise1);
+                MeasurementStorage::readAllSensors(temp,humid,noise);
+                Measurement measurement(temp,humid,noise);
                 measurement_storage.addMeasurement(measurement);
                 break;
             }
             case 2: {
-                std::cout << "Caluclute and shows the current statistics:\n";
+                std::cout << "Calculate and shows the current statistics:\n";
                 stats.calculateStatistics(stats,measurement_storage);
                 stats.printStatistics();
                 break;
@@ -71,7 +74,8 @@ int main() {
             }
             case 6: {
                 std::cout << "Have a nice day.";
-            check = false;
+                check = false;
+                break;
             }
                 default: {
                 std::cout << "Wrong choice better luck next time.\n";
