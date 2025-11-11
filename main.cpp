@@ -1,6 +1,7 @@
 #include <iomanip>
 #include <iostream>
 #include <filesystem>
+#include <memory>
 
 #include "src/sensor.h"
 #include "src/DataGenerator.h"
@@ -9,9 +10,24 @@
 #include "src/UserInterface.h"
 #include "src/Utils.h"
 
+std::unique_ptr<Sensor> makeSensor(SensorType type)
+{
+    switch (type) {
+        case SensorType::TemperatureSensor: return std::make_unique<TempSensor>();
+        case SensorType::HumiditySensor: return  std::make_unique<HumiditySensor>();
+        case SensorType::NoiseSensor: return  std::make_unique<NoiseSensor>();
+        default : return nullptr;
+    }
+}
+
 namespace fs = std::filesystem;
 
 int main() {
+
+    std::vector<std::unique_ptr<Sensor>> sensor;
+    sensor.emplace_back(makeSensor(SensorType::TemperatureSensor));
+    sensor.emplace_back(makeSensor(SensorType::HumiditySensor));
+    sensor.emplace_back(makeSensor(SensorType::NoiseSensor));
     TempConfig tcgf;
     HumidConfig hcfg;
     NoiseConfig ncfg;
