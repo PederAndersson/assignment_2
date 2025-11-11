@@ -4,15 +4,22 @@
 #include <complex.h>
 #include <string>
 
+enum class SensorType {
+    TemperatureSensor = 1,
+    HumiditySensor,
+    NoiseSensor
+};
+
 struct Interval {
         float min_;
         float max_;
 };
 
-enum class SensorType {
-    TemperatureSensor = 1,
-    HumiditySensor,
-    NoiseSensor
+struct Threshold {
+    float upper_;
+    bool check_upper_;
+    float lower_;
+    bool check_lower_;
 };
 
 struct SensorData {
@@ -21,6 +28,7 @@ struct SensorData {
     std::string unit_; //config
     int id_{}; //config
     Interval interval_; //config
+    Threshold threshold_;
     SensorType type_{};// conifg
 };
 
