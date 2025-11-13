@@ -1,28 +1,30 @@
 #ifndef ASSIGNMENT_2_MEASUREMENT_H
 #define ASSIGNMENT_2_MEASUREMENT_H
 
-#include <utility>
+
 #include <vector>
-
+#include <memory>
 #include "sensor.h"
+
 struct Measurement {
-    TempSensor temp_sensor_;
-    HumiditySensor humidity_sensor_;
-    NoiseSensor noise_sensor_;
+    SensorType type_;
+    std::string unit_;
+    float value_{};
+    std::string timestamp_;
+    int id_{};
 
-    Measurement(TempSensor  temp_sensor,HumiditySensor humidity_sensor,NoiseSensor noise_sensor) :
-    temp_sensor_(std::move(temp_sensor)), humidity_sensor_(std::move(humidity_sensor)), noise_sensor_(std::move(noise_sensor)){}
+    Measurement() = default;
+    static Measurement fromCsvString(const std::string &);
 };
-
 
 class MeasurementStorage {
 private:
     std::vector<Measurement> measurements_;
-public:
 
-    void addMeasurement(const Measurement& measurement);
+public:
+    void addMeasurement(Measurement &);
     void printAllSensors() const;
-    static void readAllSensors(TempSensor& T,HumiditySensor& H,NoiseSensor& N);
+    float takeMeasurements(const std::vector<std::unique_ptr<Sensor>>&);
     [[nodiscard]] std::vector<Measurement> getMeasurementStorage() const {return measurements_;}
     static void writeToFile(const std::string& filename, const MeasurementStorage& data);
     static void readFromFile(const std::string& filename, MeasurementStorage& data);

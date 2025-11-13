@@ -26,9 +26,9 @@ struct SensorData {
     float value_ ; //generator
     std::string timestamp_; // generator
     std::string unit_; //config
-    int id_{}; //config
+    int id_{}; //input
     Interval interval_; //config
-    Threshold threshold_;
+    Threshold threshold_; //input
     SensorType type_{};// conifg
 };
 

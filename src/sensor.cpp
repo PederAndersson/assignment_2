@@ -4,7 +4,11 @@
 
 #include <algorithm>
 
+#include "measurement.h"
 #include "Utils.h"
+
+
+
 
 
 void TempSensor::print() const {
@@ -13,11 +17,9 @@ void TempSensor::print() const {
                 << "Value: " << sensorbase_.value_<< " " << sensorbase_.unit_ << "\n"
                 << "Time: " << sensorbase_.timestamp_ << "\n";
 }
-void TempSensor::read() {
 
-    this->sensorbase_.value_ = gen_.generateSensorData(this->sensorbase_.interval_.min_,this->sensorbase_.interval_.max_);
-    this->sensorbase_.timestamp_ = DataGenerator::generateTimeStamp();
-    this->sensorbase_.id_ = id_;
+float TempSensor::read() {
+return gen_.generateSensorData(this->sensorbase_.interval_.min_, this->sensorbase_.interval_.max_);
 }
 void TempSensor::setInterval() {
     float min;
@@ -49,10 +51,8 @@ void HumiditySensor::print() const {
                  << "Time: " << sensorbase_.timestamp_ << "\n";
 }
 
-void HumiditySensor::read() {
-    this->sensorbase_.value_ = gen_.generateSensorData(this->sensorbase_.interval_.min_,this->sensorbase_.interval_.max_);
-    this->sensorbase_.timestamp_ = DataGenerator::generateTimeStamp();
-    this->sensorbase_.id_ = id_;
+float HumiditySensor::read() {
+    return gen_.generateSensorData(this->sensorbase_.interval_.min_, this->sensorbase_.interval_.max_);
 }
 
 void HumiditySensor::setThreshold() {
@@ -83,10 +83,8 @@ void NoiseSensor::print() const {
                  << "Time: " << sensorbase_.timestamp_ << "\n";
 }
 
-void NoiseSensor::read() {
-    this->sensorbase_.value_ = gen_.generateSensorData(this->sensorbase_.interval_.min_,this->sensorbase_.interval_.max_);
-    this->sensorbase_.timestamp_ = DataGenerator::generateTimeStamp();
-    this->sensorbase_.id_ = id_;
+float NoiseSensor::read() {
+    return gen_.generateSensorData(this->sensorbase_.interval_.min_, this->sensorbase_.interval_.max_);
 }
 
 void NoiseSensor::setThreshold() {

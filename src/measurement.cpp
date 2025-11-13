@@ -8,60 +8,120 @@
 #include "measurement.h"
 #include "Utils.h"
 
-void MeasurementStorage::addMeasurement(const Measurement &measurement) {
-    this->measurements_.emplace_back(measurement);
+Measurement Measurement::fromCsvString(const std::string & line) {
+    Measurement m;
+    std::istringstream ss(line);
+    std::string string;
+
+    // Sensor type
+    std::getline(ss, string, ',');
+    m.type_ = Utils::stringToType(string);
+
+    // Sensor id
+    std::getline(ss, string, ',');
+    m.id_ = std::stoi(string);
+
+    // Value
+    std::getline(ss, string, ',');
+    m.value_ = std::stof(string);
+
+    // Sensor unit
+    std::getline(ss, string, ',');
+    m.unit_ = string;
+
+    // Timestamp
+    std::getline(ss, string, ',');
+    m.timestamp_ = string;
+
+    return m;
+}
+
+
+
+void MeasurementStorage::addMeasurement(Measurement &m) {
+    this->measurements_.emplace_back(m);
 }
 
 void MeasurementStorage::printAllSensors() const { // code for formatting the printout looks.
     using namespace std::string_literals;
+    if (measurements_.empty()) {
+        std::cout << "No measurements available.\n";
+        return;
+    }
+    //iterators sorting by sensortype
+    auto itTemp = std::find_if(measurements_.begin(), measurements_.end(),
+                               [](const Measurement& m){ return m.type_ == SensorType::TemperatureSensor; });
+    auto itHum  = std::find_if(measurements_.begin(), measurements_.end(),
+                               [](const Measurement& m){ return m.type_ == SensorType::HumiditySensor; });
+    auto itNoise= std::find_if(measurements_.begin(), measurements_.end(),
+                               [](const Measurement& m){ return m.type_ == SensorType::NoiseSensor; });
 
-    for (const auto& sensor : measurements_) {
-        const auto& t = sensor.temp_sensor_.getSensorbase() ;
-        const auto& h = sensor.humidity_sensor_.getSensorbase();
-        const auto& n = sensor.noise_sensor_.getSensorbase();
+    auto end = measurements_.end();
 
+    auto make_value_cell = [](double v, std::string_view unit) {
+        std::ostringstream os;
+        os << std::fixed << std::setprecision(2)
+           << "Value: " << v << ' ' << unit;
+        return os.str();
+    };
+
+    while (itTemp != end || itHum != end || itNoise != end) {
         constexpr int n1 = 35;
-        // Headlines
+        // headline
         std::cout << std::left
-        << std::setw(n1) << ("Sensor type: "s + Utils::sensorTypeToString(SensorType::TemperatureSensor))
-        << std::setw(n1) << ("Sensor type: "s + Utils::sensorTypeToString(SensorType::HumiditySensor))
-        << std::setw(n1) << ("Sensor type: "s + Utils::sensorTypeToString(SensorType::NoiseSensor))
+                  << std::setw(n1) << (itTemp  != end ? "Sensor type: "s + Utils::sensorTypeToString(itTemp->type_)  : ""s)
+                  << std::setw(n1) << (itHum   != end ? "Sensor type: "s + Utils::sensorTypeToString(itHum->type_)   : ""s)
+                  << std::setw(n1) << (itNoise != end ? "Sensor type: "s + Utils::sensorTypeToString(itNoise->type_) : ""s)
                   << "\n";
 
-        // Id
+        // ID
         std::cout << std::left
-                  << std::setw(n1) << ("Id: " + std::to_string(t.id_))
-                  << std::setw(n1) << ("Id: " + std::to_string(h.id_))
-                  << std::setw(n1) << ("Id: " + std::to_string(n.id_))
-                  << "\n";
-        //Value and unit
-        auto make_value_cell = [](double v, std::string_view unit) {
-            std::ostringstream os;
-            os << std::fixed << std::setprecision(2)
-               << "Value: " << v << ' ' << unit;
-            return os.str();
-        };
-
-        std::cout << std::left
-                  << std::setw(n1) << make_value_cell(t.value_, t.unit_)
-                  << std::setw(n1) << make_value_cell(h.value_, h.unit_)
-                  << std::setw(n1) << make_value_cell(n.value_, n.unit_)
-                  << '\n';
-        // Time
-        std::cout << std::left
-                  << std::setw(n1) << ("Time: " + t.timestamp_)
-                  << std::setw(n1) << ("Time: " + h.timestamp_)
-                  << std::setw(n1) << ("Time: " + n.timestamp_)
+                  << std::setw(n1) << (itTemp  != end ? "Id: "s + std::to_string(itTemp->id_)  : ""s)
+                  << std::setw(n1) << (itHum   != end ? "Id: "s + std::to_string(itHum->id_)   : ""s)
+                  << std::setw(n1) << (itNoise != end ? "Id: "s + std::to_string(itNoise->id_) : ""s)
                   << "\n";
 
-        // Delineation
+        // values, units
+        std::cout << std::left
+                  << std::setw(n1) << (itTemp  != end ? make_value_cell(itTemp->value_,  itTemp->unit_)  : ""s)
+                  << std::setw(n1) << (itHum   != end ? make_value_cell(itHum->value_,   itHum->unit_)   : ""s)
+                  << std::setw(n1) << (itNoise != end ? make_value_cell(itNoise->value_, itNoise->unit_) : ""s)
+                  << "\n";
+
+        // timestamp
+        std::cout << std::left
+                  << std::setw(n1) << (itTemp  != end ? "Time: "s + itTemp->timestamp_  : ""s)
+                  << std::setw(n1) << (itHum   != end ? "Time: "s + itHum->timestamp_   : ""s)
+                  << std::setw(n1) << (itNoise != end ? "Time: "s + itNoise->timestamp_ : ""s)
+                  << "\n";
+
         std::cout << std::string(100, '-') << "\n";
+
+        // check next element
+        if (itTemp  != end) itTemp  = std::find_if(std::next(itTemp),  end, [](const Measurement& m){ return m.type_ == SensorType::TemperatureSensor; });
+        if (itHum   != end) itHum   = std::find_if(std::next(itHum),   end, [](const Measurement& m){ return m.type_ == SensorType::HumiditySensor; });
+        if (itNoise != end) itNoise = std::find_if(std::next(itNoise), end, [](const Measurement& m){ return m.type_ == SensorType::NoiseSensor; });
     }
 }
-void MeasurementStorage::readAllSensors(TempSensor &T, HumiditySensor &H, NoiseSensor &N) {
-    T.read(); // calls the read functions for all sensors.
-    H.read();
-    N.read();
+
+
+float MeasurementStorage::takeMeasurements(const std::vector<std::unique_ptr<Sensor>>& sensors) {
+    if (sensors.empty()) {
+        std::cout << "No sensors to read.";
+        return 0.0f;
+    }
+    for (const auto& s : sensors) {
+        Measurement m;
+        m.type_ = s->getSensorbase().type_;
+        m.id_ = s->getSensorbase().id_;
+        m.value_ = s->read();
+        m.unit_ = s->getSensorbase().unit_;
+        m.timestamp_ = DataGenerator::generateTimeStamp();
+        this->addMeasurement(m);
+    }
+
+
+    return 0.0f;
 }
 
 
@@ -73,16 +133,12 @@ void MeasurementStorage::writeToFile(const std::string& filename, const Measurem
         return;
     }
     if (!std::filesystem::exists(filename) || std::filesystem::file_size(filename) == 0) { //writes header if the file is empty
-        myFile << "SENSORTYPE" << "," << "ID" << "," << "VALUE" << "," << "TIMESTAMP" << "\n";
+        myFile << "SENSORTYPE" << "," << "ID" << "," << "VALUE" << "," << "UNIT" << "," << "TIMESTAMP" << "\n";
     }
     if (!data.getMeasurementStorage().empty()) { // checks if the vector is empty
         for (const auto& sensor : data.getMeasurementStorage()) {
-            myFile  << Utils::sensorTypeToString(SensorType::TemperatureSensor) << "," << sensor.temp_sensor_.getSensorbase().id_ << ","
-                    << sensor.temp_sensor_.getSensorbase().value_ << "," << sensor.temp_sensor_.getSensorbase().timestamp_ << "\n";
-            myFile  << Utils::sensorTypeToString(SensorType::HumiditySensor) << "," << sensor.humidity_sensor_.getSensorbase().id_ << ","
-                    << sensor.humidity_sensor_.getSensorbase().value_ << "," << sensor.humidity_sensor_.getSensorbase().timestamp_ << "\n";
-            myFile  << Utils::sensorTypeToString(SensorType::NoiseSensor) << "," << sensor.noise_sensor_.getSensorbase().id_ << ","
-                    << sensor.noise_sensor_.getSensorbase().value_ << "," << sensor.noise_sensor_.getSensorbase().timestamp_ << "\n";
+            myFile  << Utils::sensorTypeToString(sensor.type_) << "," << sensor.id_ << ","
+                    << sensor.value_ << "," << sensor.unit_ << "," << sensor.timestamp_ << "\n";
         }
     } else {
         std::cout << "Sensor data is empty" << "\n";
@@ -109,72 +165,15 @@ void MeasurementStorage::readFromFile(const std::string& filename, MeasurementSt
     std::string line;
     std::getline(myFile, line); // Skip header
 
-    // Temporary storage for each sensor type
-    std::vector<SensorData> tempData;
-    std::vector<SensorData> humidityData;
-    std::vector<SensorData> noiseData;
 
     while (std::getline(myFile, line)) {
         if (line.empty()) continue;
 
-        std::stringstream ss(line);
-        std::string sensorType, idStr, timestampStr, valueStr;
-
-        // assume right format : sensorType,id,value,timestamp
-        std::getline(ss, sensorType, ',');
-        std::getline(ss, idStr, ',');
-        std::getline(ss, valueStr, ',');
-        std::getline(ss, timestampStr, ',');
-
-        try {
-            int id = std::stoi(idStr); // change string to int
-            double value = std::stod(valueStr); // change string to double
-
-            SensorData sensorData;
-            sensorData.id_ = id;
-            sensorData.timestamp_ = timestampStr;
-            sensorData.value_ = static_cast<float>(value); // chang double to float to match the sensor
-
-            // sort with enum to prevent misspelling
-            if (sensorType == Utils::sensorTypeToString(SensorType::TemperatureSensor)) {
-                TempSensor temp_sensor;
-                sensorData.unit_ = temp_sensor.getSensorbase().unit_;
-                tempData.push_back(sensorData);
-            }
-            else if (sensorType == Utils::sensorTypeToString(SensorType::HumiditySensor)) {
-                HumiditySensor humidity_sensor;
-                sensorData.unit_ = humidity_sensor.getSensorbase().unit_;
-                humidityData.push_back(sensorData);
-            }
-            else if (sensorType == Utils::sensorTypeToString(SensorType::NoiseSensor)) {
-                NoiseSensor noise_sensor;
-                sensorData.unit_ = noise_sensor.getSensorbase().unit_;
-                noiseData.push_back(sensorData);
-            }
-            else {
-                std::cerr << "Unknown sensor type: " << sensorType << " on line: " << line << "\n";
-            }
-
-        } catch (const std::invalid_argument&) {
-            std::cerr << "Invalid value on line: " << line << "\n";
-        } catch (const std::out_of_range&) {
-            std::cerr << "Value out of range on line: " << line << "\n";
-        }
+        auto measurement = Measurement::fromCsvString(line);
+        data.addMeasurement(measurement);
     }
 
     myFile.close();
-
-    // Create Measurement objects (you need to adapt this depending on how your sensors are organized)
-    // If each row represents a complete measurement:
-
-    for (size_t i = 0; i < std::min({tempData.size(), humidityData.size(), noiseData.size()}); ++i) {
-        TempSensor tempSensor(tempData[i].id_, tempData[i]);
-        HumiditySensor humiditySensor(humidityData[i].id_, humidityData[i]);
-        NoiseSensor noiseSensor(noiseData[i].id_, noiseData[i]);
-
-        Measurement measurement(tempSensor, humiditySensor, noiseSensor);
-        data.addMeasurement(measurement);
-    }
 
     std::cout << "Data retrieved.\n";
 }

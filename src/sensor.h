@@ -18,9 +18,10 @@ protected:
 public:
     virtual ~Sensor() = default;
     virtual void print() const = 0;
-    virtual void read() = 0;
+    virtual float read() = 0;
     virtual void setThreshold() = 0;
     virtual void setInterval() = 0;
+    virtual SensorData getSensorbase() const = 0;
 };
 
 
@@ -42,16 +43,16 @@ public:
     TempSensor(int id, std::vector<SensorData>::const_reference value) : id_(id){sensorbase_ = value;}
 
     void print() const override ;
-    void read() override;
+    float read() override;
     void setThreshold() override;
     void setInterval() override;
-    [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
+    [[nodiscard]] SensorData getSensorbase() const override {return this->sensorbase_;}
 };
 class HumiditySensor : public Sensor {
 private:
     int id_;
 public:
-    HumiditySensor(int id, HumidConfig& cfg) :id_(id) {
+    HumiditySensor(int id, const HumidConfig& cfg) :id_(id) {
         sensorbase_.id_ = id_;
         sensorbase_.unit_ = std::string(cfg.unit_);
         sensorbase_.interval_ = cfg.interval_;
@@ -62,17 +63,17 @@ public:
     HumiditySensor(int id, std::vector<SensorData>::const_reference value) : id_(id){sensorbase_ = value;}
 
     void print() const override;
-    void read() override;
+    float read() override;
     void setThreshold() override;
     void setInterval() override;
 
-    [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
+    [[nodiscard]] SensorData getSensorbase() const override {return this->sensorbase_;}
 };
 class NoiseSensor : public Sensor {
 private:
     int id_;
 public:
-    NoiseSensor(int id, NoiseConfig& cfg) :id_(id) {
+    NoiseSensor(int id, const NoiseConfig& cfg) :id_(id) {
         sensorbase_.id_ = id_;
         sensorbase_.unit_ = std::string(cfg.unit_);
         sensorbase_.interval_ = cfg.interval_;
@@ -83,10 +84,10 @@ public:
     NoiseSensor(int id, std::vector<SensorData>::const_reference value) : id_(id){sensorbase_ = value;}
 
     void print() const override;
-    void read() override;
+    float read() override;
     void setThreshold() override;
     void setInterval() override;
-    [[nodiscard]] SensorData getSensorbase() const {return this->sensorbase_;}
+    [[nodiscard]] SensorData getSensorbase() const override {return this->sensorbase_;}
 };
 
 
