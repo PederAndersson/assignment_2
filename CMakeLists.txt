@@ -14,8 +14,10 @@ add_executable(assignment_2 main.cpp
         src/SensorData.h
         src/statistics.cpp
         src/statistics.h
-        src/UserInterface.cpp
-        src/UserInterface.h
+        src/SystemController.cpp
+        src/SystemController.h
         src/Utils.cpp
         src/Utils.h
+        src/UserInterface.cpp
+        src/UserInterface.h
 )

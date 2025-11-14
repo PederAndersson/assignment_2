@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include <vector>
+
 
 #include "SensorData.h"
 
@@ -15,8 +15,9 @@ public:
     static int validInput(int min, int max);
     static float validFloatInput();
     static std::string sensorTypeToString(SensorType type);
-    static SensorType stringToType(std::string& line);
-
+    static SensorType stringToType(const std::string& line);
+    static void clearTerminal();
+    static void awaitResponse();
 };
 
 

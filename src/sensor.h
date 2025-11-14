@@ -13,7 +13,7 @@
 
 class Sensor { //abstract base class
 protected:
-    SensorData sensorbase_;
+    SensorData sensorbase_{};
     DataGenerator gen_;
 public:
     virtual ~Sensor() = default;
@@ -21,7 +21,7 @@ public:
     virtual float read() = 0;
     virtual void setThreshold() = 0;
     virtual void setInterval() = 0;
-    virtual SensorData getSensorbase() const = 0;
+    [[nodiscard]] virtual SensorData getSensorbase() const = 0;
 };
 
 
@@ -30,9 +30,8 @@ private:
     int id_;
 
 public:
-    TempSensor(int id, const TempConfig& cfg) : id_(id)
-    {
-        sensorbase_.id_ = id;
+    TempSensor(int id, const TempConfig& cfg) : id_(id){
+        sensorbase_.id_ = id_;
         sensorbase_.unit_ = std::string(cfg.unit_);
         sensorbase_.interval_ = cfg.interval_;
         sensorbase_.type_ = cfg.type_;

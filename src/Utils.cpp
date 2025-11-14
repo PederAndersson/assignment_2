@@ -4,13 +4,12 @@
 #include "Utils.h"
 
 #include "measurement.h"
-#include "sensor.h"
 #include "SensorData.h"
 
 int Utils::validInput(int min, int max) {
     int number;
     std::cout << "> ";
-    while (!(std::cin >> number) || number < min || number > max) {
+    while (!(std::cin >> number) && number >= min && number <= max) {
 
         std::cin.clear(); // Clear error flag
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
@@ -47,7 +46,7 @@ std::string Utils::sensorTypeToString(SensorType type)  {
     }
 }
 
-SensorType Utils::stringToType(std::string &line) {
+SensorType Utils::stringToType(const std::string &line) {
     if (line == "Temperature sensor") {
         return SensorType::TemperatureSensor;
     }
@@ -59,3 +58,14 @@ SensorType Utils::stringToType(std::string &line) {
     }
 }
 
+void Utils::clearTerminal() {
+    std::cout << "\033c";
+}
+
+void Utils::awaitResponse() {
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+                        '\n'); // Flush the buffer
+        std::cout << "Press Enter to continue...";
+        std::cin.get(); // Waits until 'Enter' is pressed
+
+}

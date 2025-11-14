@@ -22,13 +22,10 @@ private:
     std::vector<Measurement> measurements_;
 
 public:
-    void addMeasurement(Measurement &);
+    void addMeasurement(Measurement &m);
     void printAllSensors() const;
     float takeMeasurements(const std::vector<std::unique_ptr<Sensor>>&);
     [[nodiscard]] std::vector<Measurement> getMeasurementStorage() const {return measurements_;}
-    static void writeToFile(const std::string& filename, const MeasurementStorage& data);
-    static void readFromFile(const std::string& filename, MeasurementStorage& data);
-    static void clearFile(const std::string& filename);
 
 };
 
