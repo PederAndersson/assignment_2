@@ -24,6 +24,11 @@ Statistics::Statistics(const MeasurementStorage& data) {
         temp_data.begin(), temp_data.end(), std::back_inserter(filterd_data),
         [&](const Measurement &m){ return m.type_ == sensortype; } );
 
+    if (filterd_data.empty()) {
+        std::cout << "No measurements for that sensortype.\n";
+        return;
+    }
+
     auto sum = std::accumulate(
         filterd_data.begin(),filterd_data.end(),
         0.0,
@@ -40,7 +45,7 @@ Statistics::Statistics(const MeasurementStorage& data) {
 
     this->max_ = std::max_element(filterd_data.begin(),filterd_data.end(),
         [](const Measurement &a, const Measurement &b) {
-            return a.value_ > b.value_;
+            return a.value_ < b.value_;
         })
         ->value_;
 
@@ -65,7 +70,7 @@ void Statistics::printStatistics() const { // prints the statistics using the sa
 
     using namespace std::string_literals;
 
-    const int n = 35;
+    constexpr int n = 35;
 
     std::cout << std::string(n, '-') << "\n";
     // headline

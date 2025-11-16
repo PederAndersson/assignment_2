@@ -56,6 +56,7 @@ SensorType Utils::stringToType(const std::string &line) {
     if (line == "Noise sensor") {
         return SensorType::NoiseSensor;
     }
+    throw std::invalid_argument("Unknown sensor type: " + line);
 }
 
 void Utils::clearTerminal() {

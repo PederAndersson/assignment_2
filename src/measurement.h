@@ -4,7 +4,8 @@
 
 #include <vector>
 #include <memory>
-#include "sensor.h"
+enum class SensorType;
+class Sensor;
 
 struct Measurement {
     SensorType type_;
@@ -24,7 +25,6 @@ private:
 public:
     void addMeasurement(Measurement &m);
     void printAllSensors() const;
-    float takeMeasurements(const std::vector<std::unique_ptr<Sensor>>&);
     [[nodiscard]] std::vector<Measurement> getMeasurementStorage() const {return measurements_;}
 
 };
