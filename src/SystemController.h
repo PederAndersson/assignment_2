@@ -5,7 +5,8 @@
 #include <memory>
 #include "SensorData.h"
 #include "measurement.h"
-class Sensor;
+#include "sensor.h"
+enum class SensorType;
 
 
 enum class UserMenu {
@@ -19,19 +20,9 @@ enum class UserMenu {
     AlarmLog
 };
 
-inline std::unique_ptr<Sensor> makeSensor(SensorType type)
-{
-    TempConfig tcgf;
-    HumidConfig hcfg;
-    NoiseConfig ncfg;
-    switch (type) {
-        case SensorType::TemperatureSensor: return std::make_unique<TempSensor>(1,tcgf);
-        case SensorType::HumiditySensor: return  std::make_unique<HumiditySensor>(2,hcfg);
-        case SensorType::NoiseSensor: return  std::make_unique<NoiseSensor>(3,ncfg);
-        default : return nullptr;
-    }
-}
 
+
+std::unique_ptr<Sensor> makeSensor(SensorType type);
 
 class SystemController {
 private:
@@ -40,11 +31,14 @@ private:
     //threshold
 
 public:
-    SystemController(MeasurementStorage& measurement_storage) : measurements_(measurement_storage){ }
+    explicit SystemController(MeasurementStorage& measurement_storage) : measurements_(measurement_storage){ }
 
     void run();
     void addMesurements(const std::vector<std::unique_ptr<Sensor>>& sensors) const;
-    void addSensor(std::vector<std::unique_ptr<Sensor>>& sensors);
+    void addSensor();
+    static void makeObservers(const std::vector<std::unique_ptr<Sensor>>& sensors);
+    static void checkObservers(const std::vector<std::unique_ptr<Sensor>>& sensors);
+    static void setObservers(const std::vector<std::unique_ptr<Sensor>>& sensors);
     static void writeToFile(const std::string& filename, const MeasurementStorage& data);
     static void readFromFile(const std::string& filename, MeasurementStorage& data);
     static void clearFile(const std::string& filename);

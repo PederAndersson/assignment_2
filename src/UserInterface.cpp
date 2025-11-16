@@ -2,6 +2,8 @@
 #include <iostream>
 #include "UserInterface.h"
 
+#include "Logger.h"
+
 void UserInterface::mainMenu() {
     std::cout   << "1. Add sensor.\n"
                 << "2. Set sensor alarms.\n"
@@ -35,25 +37,21 @@ void UserInterface::addSensorMenu() {
                 << "1. Temperaturesensor.\n"
                 << "2. Humiditysensor.\n"
                 << "3. Noisesensor.\n"
+                << "4. All sensors.\n"
                 << ">";
 }
 
 void UserInterface::errorLogMenu() {
-    std::cout   << "Alarms flagged.\n"
-                << "which sensor do you want to check?\n"
-                << "1. Temperaturesensor.\n"
-                << "2. Humiditysensor.\n"
-                << "3. Noisesensor.\n"
-                << ">";
+    std::cout   << "Logged sensor alarms\n";
 
 }
 
 void UserInterface::setSensorAlarmMenu() {
     std::cout   << "Set the alarm threshold for a given sensor.\n"
                 << "which sensor \n"
-                << "1. Temperaturesensor.\n"
-                << "2. Humiditysensor.\n"
-                << "3. Noisesensor.\n"
+                << "1. Set alarm thresholds for sensors.\n"
+                << "2. Check alarm thresholds.\n"
+                << "3. Set new Thresholds.\n"
                 << ">";
 }
 

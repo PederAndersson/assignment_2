@@ -3,10 +3,28 @@
 #include <iostream>
 
 #include "SystemController.h"
+
+#include "DataGenerator.h"
+#include "Logger.h"
 #include "statistics.h"
 #include "UserInterface.h"
 #include "Utils.h"
+#include "Observer.h"
+#include "sensor.h"
 
+
+std::unique_ptr<Sensor> makeSensor(SensorType type)
+{
+    TempConfig tcgf;
+    HumidConfig hcfg;
+    NoiseConfig ncfg;
+    switch (type) {
+        case SensorType::TemperatureSensor: return std::make_unique<TempSensor>(0,tcgf);
+        case SensorType::HumiditySensor: return  std::make_unique<HumiditySensor>(0,hcfg);
+        case SensorType::NoiseSensor: return  std::make_unique<NoiseSensor>(0,ncfg);
+        default : return nullptr;
+    }
+}
 void SystemController::addMesurements(const std::vector<std::unique_ptr<Sensor>>& sensors) const {
     if (sensors.empty()) {
         std::cout << "No sensors to read.";
@@ -19,12 +37,13 @@ void SystemController::addMesurements(const std::vector<std::unique_ptr<Sensor>>
         m.value_ = s->read();
         m.unit_ = s->getSensorbase().unit_;
         m.timestamp_ = DataGenerator::generateTimeStamp();
+        s->notifyAll(m,m.value_);
         measurements_.addMeasurement(m);
     }
 }
 
-void SystemController::addSensor(std::vector<std::unique_ptr<Sensor> > &sensors) {
-    int choice = Utils::validInput(1,3);
+void SystemController::addSensor() {
+    int choice = Utils::validInput(1,4);
     switch (static_cast<SensorType>(choice)) {
         case SensorType::TemperatureSensor:
             this->sensors_.emplace_back(makeSensor(SensorType::TemperatureSensor));
@@ -35,11 +54,61 @@ void SystemController::addSensor(std::vector<std::unique_ptr<Sensor> > &sensors)
         case SensorType::NoiseSensor:
             this->sensors_.emplace_back(makeSensor(SensorType::NoiseSensor));
             break;
-        default:
-            nullptr;
+        case SensorType::All:
+                this->sensors_.emplace_back(makeSensor(SensorType::TemperatureSensor));
+                this->sensors_.emplace_back(makeSensor(SensorType::HumiditySensor));
+                this->sensors_.emplace_back(makeSensor(SensorType::NoiseSensor));
             break;
+        }
+}
+
+
+void SystemController::makeObservers(const std::vector<std::unique_ptr<Sensor>>& sensors) {
+    std::cout << "Set new thresholds observers.\n";
+    for (const auto& s : sensors) {
+
+        std::cout   << "Set the " << Utils::sensorTypeToString(s->getSensorbase().type_) << " alarm interval between "
+        << s->getSensorbase().interval_.min_ << " and " << s->getSensorbase().interval_.max_ << "\n";
+        std::cout << "Please input the lower value then upper.\n" << ">";
+
+        auto obs = std::make_unique<ThresholdObserver>(
+            Utils::validFloatInput(),
+            Utils::validFloatInput()
+            );
+        s->addObserver(std::move(obs));
+    }
+
+}
+
+void SystemController::checkObservers(const std::vector<std::unique_ptr<Sensor> > &sensors) {
+    std::cout << "Checks the current observer settings.\n";
+
+    for (const auto& s : sensors) {
+        std::cout << Utils::sensorTypeToString(s->getSensorbase().type_) << "\n";
+
+        const auto& observers = s->getObservers();
+
+        if (observers.empty()) {
+            std::cout << "  No observers set.\n";
+            continue;
+        }
+
+        for (const auto& obs : observers) {
+            MinMax t = obs->getThreshold();
+            std::cout << "  Lower threshold: " << t.lower_
+                      << "  Upper threshold: " << t.upper_ << "\n";
+        }
     }
 }
+
+void SystemController::setObservers(const std::vector<std::unique_ptr<Sensor> > &sensors) {
+    std::cout << "Changes the current observer settings.\n";
+    for (const auto& s : sensors) {
+        std::cout   << Utils::sensorTypeToString(s->getSensorbase().type_) << "\n";
+        s->setObserver();
+    }
+}
+
 
 
 
@@ -52,17 +121,38 @@ void SystemController::run() {
         switch (static_cast<UserMenu>(menu_choice)) {
             case UserMenu::AddSensors: {
                 UserInterface::addSensorMenu();
-                addSensor(sensors_);
+                addSensor();
                 Utils::awaitResponse();
                 Utils::clearTerminal();
                 break;
             }
             case UserMenu::SetSensoralarms: {
-                std::cout << "Not yet implemented.\n";
-                Utils::awaitResponse();
-                Utils::clearTerminal();
-                break;
+                UserInterface::setSensorAlarmMenu();
+                switch (Utils::validInput(1,3)) {
+                    case 1: {
 
+                        makeObservers(sensors_);
+                        Utils::awaitResponse();
+                        Utils::clearTerminal();
+                        break;
+                    }
+                    case 2: {
+                        checkObservers(sensors_);
+                        Utils::awaitResponse();
+                        Utils::clearTerminal();
+                        break;
+                    }
+                    case 3: {
+                        setObservers(sensors_);
+                        Utils::awaitResponse();
+                        Utils::clearTerminal();
+                        break;
+                    }
+                    default: {
+                        std::cout << "DONKEY!!";
+                    }
+                }
+                break;
             }
             case UserMenu::ReadSensors: {
                 UserInterface::readSensorMenu();
@@ -121,30 +211,22 @@ void SystemController::run() {
             }
             case UserMenu::AlarmLog: {
                 UserInterface::errorLogMenu();
-                std::cout << "Not yet implemented.";
+                Logger::instance().printAlarms();
                 Utils::awaitResponse();
                 Utils::clearTerminal();
-                /*int sensor_choice = Utils::validInput(1,3);
-                switch (static_cast<SensorType>(sensor_choice)) {
-                    case SensorType::TemperatureSensor: {
-                        break;
-                    }
-                    case SensorType::HumiditySensor: {
-                        break;
-                    }
-                    case SensorType::NoiseSensor: {
-                        break;
-                    }
-                }*/
+
                 break;
             }
             case UserMenu::Exit: {
                 std::cout << "have a nice day!\n";
+                Utils::awaitResponse();
                 run = false;
                 break;
             }
             default: {
                 std::cout << "Wrong choice better luck next time.\n";
+                Utils::awaitResponse();
+                Utils::clearTerminal();
                 break;
             }
         }
