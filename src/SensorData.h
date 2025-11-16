@@ -1,13 +1,13 @@
 
 #ifndef ASSIGNMENT_2_SENSORDATA_H
 #define ASSIGNMENT_2_SENSORDATA_H
-#include <complex.h>
 #include <string>
 
 enum class SensorType {
     TemperatureSensor = 1,
     HumiditySensor,
-    NoiseSensor
+    NoiseSensor,
+    All
 };
 
 struct Interval {
@@ -15,12 +15,6 @@ struct Interval {
         float max_;
 };
 
-struct Threshold {
-    float upper_;
-    bool check_upper_;
-    float lower_;
-    bool check_lower_;
-};
 
 struct SensorData {
     float value_ ; //generator
@@ -28,7 +22,6 @@ struct SensorData {
     std::string unit_; //config
     int id_{}; //input
     Interval interval_; //config
-    Threshold threshold_; //input
     SensorType type_{};// conifg
 };
 
