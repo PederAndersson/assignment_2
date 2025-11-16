@@ -20,4 +20,8 @@ add_executable(assignment_2 main.cpp
         src/Utils.h
         src/UserInterface.cpp
         src/UserInterface.h
+        src/Observer.cpp
+        src/Observer.h
+        src/Logger.cpp
+        src/Logger.h
 )
