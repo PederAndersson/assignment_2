@@ -9,13 +9,15 @@
 int Utils::validInput(int min, int max) {
     int number;
     std::cout << "> ";
-    while (!(std::cin >> number) && number >= min && number <= max) {
-
+    while (true) {
+        if (std::cin >> number && number >= min && number <= max) {
+            return number;
+        }
+        std::cout << "Wrong input try again.\n";
         std::cin.clear(); // Clear error flag
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
                         '\n'); // Flush bad input
     }
-    return number;
 }
 
 

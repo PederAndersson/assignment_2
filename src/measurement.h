@@ -1,7 +1,7 @@
 #ifndef ASSIGNMENT_2_MEASUREMENT_H
 #define ASSIGNMENT_2_MEASUREMENT_H
 
-
+#include <string>
 #include <vector>
 enum class SensorType;
 class Sensor;

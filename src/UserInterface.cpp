@@ -56,7 +56,11 @@ void UserInterface::setSensorAlarmMenu() {
 }
 
 void UserInterface::readSensorMenu() {
-    std::cout   << "Read and take measurents from all sensors.\n";
+    std::cout   << "Read and take measurents from all sensors.\n"
+                << "1. Take a single measurement from all sensors.\n"
+                << "2. Start data collector.\n"
+                << "3. Stop data collector.\n"
+                << ">";
 }
 
 void UserInterface::sensorReadingsMenu() {
