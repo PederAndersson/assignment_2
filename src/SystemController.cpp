@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <mutex>
 
 #include "SystemController.h"
 
@@ -25,7 +26,9 @@ std::unique_ptr<Sensor> makeSensor(SensorType type)
         default : return nullptr;
     }
 }
+std::mutex datamutex;
 void SystemController::addMesurements(const std::vector<std::unique_ptr<Sensor>>& sensors) const {
+    std::unique_lock datalock(datamutex);
     if (sensors.empty()) {
         std::cout << "No sensors to read.";
         return;
@@ -40,7 +43,16 @@ void SystemController::addMesurements(const std::vector<std::unique_ptr<Sensor>>
         s->notifyAll(m,m.value_);
         measurements_.addMeasurement(m);
     }
+    datalock.unlock();
 }
+
+void SystemController::runCollector( std::atomic<bool> &is_data_collectinfg, const std::vector<std::unique_ptr<Sensor> >& sensors) {
+    while (is_data_collectinfg) {
+        addMesurements(sensors);
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+    }
+}
+
 
 void SystemController::addSensor() {
     int choice = Utils::validInput(1,4);
@@ -119,7 +131,7 @@ void SystemController::setObservers(const std::vector<std::unique_ptr<Sensor> > 
 void SystemController::writeToFile(const std::string& filename, const MeasurementStorage& data)  {
     std::ofstream myFile;
     myFile.open(filename,std::ios::app | std::ios::out);
-    if (!myFile.is_open()) { //checks is you have the right filename
+    if (!myFile.is_open()) { //checks if you have the right filename
         std::cerr << "Error" << filename << " not found";
         return;
     }
@@ -189,9 +201,11 @@ void SystemController::clearFile(const std::string& filename) {
 
 
 void SystemController::run() {
-    bool run = true;
+    std::atomic<bool> is_running = true;
+    std::atomic<bool> is_datacollecting = false;
+    std::thread collector;
     const std::string filename = "Sensor_data.csv";
-    while (run == true) {
+    while (is_running == true) {
         UserInterface::mainMenu();
         int menu_choice = Utils::validInput(0,7);
         switch (static_cast<UserMenu>(menu_choice)) {
@@ -232,9 +246,39 @@ void SystemController::run() {
             }
             case UserMenu::ReadSensors: {
                 UserInterface::readSensorMenu();
-                addMesurements(sensors_);
-                Utils::awaitResponse();
-                Utils::clearTerminal();
+                switch (Utils::validInput(1,3)) {
+                    case 1: {
+                        std::cout << "Measurement collected.\n";
+                        addMesurements(sensors_);
+                        Utils::awaitResponse();
+                        Utils::clearTerminal();
+                        break;
+                    }
+                    case 2: {
+                        std::cout << "Data collector started.\n";
+                        if (!is_datacollecting && !collector.joinable()) {
+                        is_datacollecting = true;
+                        collector = std::thread(&SystemController::runCollector,
+                            this,
+                            std::ref(is_datacollecting),
+                            std::ref(sensors_));
+                        } else {
+                            std::cout << "Collector is running.\n";
+                        }
+                        Utils::awaitResponse();
+                        Utils::clearTerminal();
+                        break;
+                    }
+                    case 3: {
+                        std::cout << "Data collector stopping \n";
+                        is_datacollecting = false;
+                        if (collector.joinable()){collector.join();}
+                        Utils::awaitResponse();
+                        Utils::clearTerminal();
+                        break;
+                    }
+                    default: std::cout << "wrooooong\n";
+                }
                 break;
             }
             case UserMenu::SensorStatistics: {
@@ -296,7 +340,7 @@ void SystemController::run() {
             case UserMenu::Exit: {
                 std::cout << "have a nice day!\n";
                 Utils::awaitResponse();
-                run = false;
+                is_running = false;
                 break;
             }
             default: {

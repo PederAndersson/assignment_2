@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <memory>
+#include <thread>
+#include <atomic>
+
 #include "SensorData.h"
 #include "measurement.h"
 #include "sensor.h"
@@ -28,13 +31,15 @@ class SystemController {
 private:
     std::vector<std::unique_ptr<Sensor>> sensors_;
     MeasurementStorage& measurements_;
-    //threshold
+
+
 
 public:
     explicit SystemController(MeasurementStorage& measurement_storage) : measurements_(measurement_storage){ }
 
     void run();
     void addMesurements(const std::vector<std::unique_ptr<Sensor>>& sensors) const;
+    void runCollector(std::atomic<bool> & is_data_collectinfg, const std::vector<std::unique_ptr<Sensor>>& sensors);
     void addSensor();
     static void makeObservers(const std::vector<std::unique_ptr<Sensor>>& sensors);
     static void checkObservers(const std::vector<std::unique_ptr<Sensor>>& sensors);
