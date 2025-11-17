@@ -13,7 +13,7 @@ private:
     float max_ = 0.0f;
     float variance_ = 0.0f;
     float standard_dev_ = 0.0f;
-    int id_;
+    int id_{};
     std::string type_;
     std::string unit_;
 

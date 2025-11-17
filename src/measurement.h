@@ -3,7 +3,6 @@
 
 
 #include <vector>
-#include <memory>
 enum class SensorType;
 class Sensor;
 
