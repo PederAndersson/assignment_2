@@ -47,7 +47,6 @@ void UserInterface::errorLogMenu() {
 
 void UserInterface::setSensorAlarmMenu() {
     std::cout   << "Set the alarm threshold for a given sensor.\n"
-                << "which sensor \n"
                 << "1. Set alarm thresholds for sensors.\n"
                 << "2. Check alarm thresholds.\n"
                 << "3. Set new Thresholds.\n"
@@ -64,4 +63,8 @@ void UserInterface::readSensorMenu() {
 
 void UserInterface::sensorReadingsMenu() {
     std::cout << "prints all the sensor readings.\n";
+}
+
+void UserInterface::observerMenu() {
+
 }
