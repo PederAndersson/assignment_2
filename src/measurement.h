@@ -7,7 +7,7 @@ enum class SensorType;
 class Sensor;
 
 struct Measurement {
-    SensorType type_;
+    SensorType type_{};
     std::string unit_;
     float value_{};
     std::string timestamp_;

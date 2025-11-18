@@ -15,54 +15,54 @@
 Statistics::Statistics(const MeasurementStorage& data) {
     if (data.getMeasurementStorage().empty()){ return;}
     int choice = Utils::validInput(1,3);
-    auto sensortype = static_cast<SensorType>(choice);
+    auto sensor_type = static_cast<SensorType>(choice);
 
     std::vector<Measurement> temp_data = data.getMeasurementStorage();
-    std::vector<Measurement> filterd_data;
+    std::vector<Measurement> filtered_data;
 
     std::copy_if(
-        temp_data.begin(), temp_data.end(), std::back_inserter(filterd_data),
-        [&](const Measurement &m){ return m.type_ == sensortype; } );
+        temp_data.begin(), temp_data.end(), std::back_inserter(filtered_data),
+        [&](const Measurement &m){ return m.type_ == sensor_type; } );
 
-    if (filterd_data.empty()) {
-        std::cout << "No measurements for that sensortype.\n";
+    if (filtered_data.empty()) {
+        std::cout << "No measurements for that sensor type.\n";
         return;
     }
 
     auto sum = std::accumulate(
-        filterd_data.begin(),filterd_data.end(),
+        filtered_data.begin(),filtered_data.end(),
         0.0,
         [] (float sum, const Measurement& measurement) {
             return sum + measurement.value_;
     });
-    this->count_ = filterd_data.size();
+    this->count_ = filtered_data.size();
     this->mean_ = sum / this->count_;
-    this->min_ = std::min_element(filterd_data.begin(),filterd_data.end(),
+    this->min_ = std::min_element(filtered_data.begin(),filtered_data.end(),
         [](const Measurement& a, const Measurement& b) {
             return a.value_ < b.value_;
         })
         ->value_;
 
-    this->max_ = std::max_element(filterd_data.begin(),filterd_data.end(),
+    this->max_ = std::max_element(filtered_data.begin(),filtered_data.end(),
         [](const Measurement &a, const Measurement &b) {
             return a.value_ < b.value_;
         })
         ->value_;
 
     float square_diff = 0.0f;
-    for (auto & d : filterd_data) {
+    for (auto & d : filtered_data) {
         float diff = d.value_ - this->mean_;
         square_diff += diff * diff;
     }
 
-    this->variance_ = square_diff / static_cast<float>(filterd_data.size());
+    this->variance_ = square_diff / static_cast<float>(filtered_data.size());
 
     this->standard_dev_ = std::sqrt(this->variance_);
 
-    this->type_ = Utils::sensorTypeToString(filterd_data.at(0).type_);
+    this->type_ = Utils::sensorTypeToString(filtered_data.at(0).type_);
 
-    this->unit_ = filterd_data.at(0).unit_;
-    this->id_ = filterd_data.at(0).id_;
+    this->unit_ = filtered_data.at(0).unit_;
+    this->id_ = filtered_data.at(0).id_;
 
 }
 
@@ -119,6 +119,6 @@ void Statistics::printStatistics() const { // prints the statistics using the sa
               << std::setw(n) << make_value_cell(this->standard_dev_, "Std dev: ")
               << "\n";
 
-    // deliniation
+    // delineation
     std::cout << std::string(n, '-') << "\n";
 }

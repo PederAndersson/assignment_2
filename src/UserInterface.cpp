@@ -2,7 +2,6 @@
 #include <iostream>
 #include "UserInterface.h"
 
-#include "Logger.h"
 
 void UserInterface::mainMenu() {
     std::cout   << "1. Add sensor.\n"

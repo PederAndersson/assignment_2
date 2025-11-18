@@ -48,9 +48,9 @@ void MeasurementStorage::printAllSensors() const { // code for formatting the pr
         std::cout << "No measurements available.\n";
         return;
     }
-    //iterators sorting by sensortype
-    auto itTemp = std::find_if(measurements_.begin(), measurements_.end(),
-                               [](const Measurement& m){ return m.type_ == SensorType::TemperatureSensor; });
+    //iterators sorting by sensor types
+    auto itTemp = std::ranges::find_if(measurements_,
+                                       [](const Measurement& m){ return m.type_ == SensorType::TemperatureSensor; });
     auto itHum  = std::find_if(measurements_.begin(), measurements_.end(),
                                [](const Measurement& m){ return m.type_ == SensorType::HumiditySensor; });
     auto itNoise= std::find_if(measurements_.begin(), measurements_.end(),
@@ -97,7 +97,7 @@ void MeasurementStorage::printAllSensors() const { // code for formatting the pr
 
         std::cout << std::string(100, '-') << "\n";
 
-        // check next element
+        // check the next element
         if (itTemp  != end) itTemp  = std::find_if(std::next(itTemp),  end, [](const Measurement& m){ return m.type_ == SensorType::TemperatureSensor; });
         if (itHum   != end) itHum   = std::find_if(std::next(itHum),   end, [](const Measurement& m){ return m.type_ == SensorType::HumiditySensor; });
         if (itNoise != end) itNoise = std::find_if(std::next(itNoise), end, [](const Measurement& m){ return m.type_ == SensorType::NoiseSensor; });

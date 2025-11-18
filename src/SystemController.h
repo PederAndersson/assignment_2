@@ -39,7 +39,7 @@ public:
 
     void run();
     void addMeasurements(const std::vector<std::unique_ptr<Sensor>>& sensors) const;
-    void runCollector(std::atomic<bool> & is_data_collecting, const std::vector<std::unique_ptr<Sensor>>& sensors);
+    void runCollector(const std::atomic<bool> & is_data_collecting, const std::vector<std::unique_ptr<Sensor>>& sensors) const;
     void addSensor();
     static void makeObservers(const std::vector<std::unique_ptr<Sensor>>& sensors);
     static void checkObservers(const std::vector<std::unique_ptr<Sensor>>& sensors);

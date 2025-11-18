@@ -17,12 +17,12 @@ struct Interval {
 
 
 struct SensorData {
-    float value_ ; //generator
-    std::string timestamp_; // generator
-    std::string unit_; //config
-    int id_{}; //input
-    Interval interval_; //config
-    SensorType type_{};// conifg
+    float value_ ;
+    std::string timestamp_;
+    std::string unit_;
+    int id_{};
+    Interval interval_;
+    SensorType type_{};
 };
 
 struct TempConfig {

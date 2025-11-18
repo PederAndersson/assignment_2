@@ -3,7 +3,6 @@
 
 #include "Utils.h"
 
-#include "measurement.h"
 #include "SensorData.h"
 
 int Utils::validInput(int min, int max) {

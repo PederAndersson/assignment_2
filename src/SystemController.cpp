@@ -46,8 +46,8 @@ void SystemController::addMeasurements(const std::vector<std::unique_ptr<Sensor>
     datalock.unlock();
 }
 
-void SystemController::runCollector( std::atomic<bool> &is_data_collectinfg, const std::vector<std::unique_ptr<Sensor> >& sensors) {
-    while (is_data_collectinfg) {
+void SystemController::runCollector(const std::atomic<bool> &is_data_collecting, const std::vector<std::unique_ptr<Sensor> >& sensors) const {
+    while (is_data_collecting) {
         addMeasurements(sensors);
         std::this_thread::sleep_for(std::chrono::seconds(5));
     }
