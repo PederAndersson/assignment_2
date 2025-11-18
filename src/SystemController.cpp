@@ -206,6 +206,9 @@ void SystemController::run() {
     std::thread collector;
     const std::string filename = "Sensor_data.csv";
     while (is_running == true) {
+        if (is_datacollecting == true) {
+            std::cout << "\033[31mDatacollector is running.\033[0m\n";
+        }
         UserInterface::mainMenu();
         int menu_choice = Utils::validInput(0,7);
         switch (static_cast<UserMenu>(menu_choice)) {
