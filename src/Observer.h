@@ -24,6 +24,10 @@ public:
 
 };
 
+enum class Bound {
+    upper,
+    lower
+};
 
 class ThresholdObserver : public IObserver {
 private:
@@ -35,6 +39,21 @@ public:
         value_.lower_ = lower;
         check_lower_ = true;
         check_upper_ = true;
+    }
+
+    ThresholdObserver(float value, Bound bound) {
+        switch (bound) {
+            case Bound::upper: {
+                value_.upper_ = value;
+                check_upper_ = true;
+                break;
+            }
+            case Bound::lower: {
+                value_.lower_ = value;
+                check_lower_ = true;
+                break;
+            }
+        }
     }
     void ifBreachedNotify(const Measurement& m) override;
     void checkValue(const Measurement& m, const float & value) override;
