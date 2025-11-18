@@ -25,7 +25,7 @@ public:
 };
 
 enum class Bound {
-    upper,
+    upper = 1,
     lower
 };
 
