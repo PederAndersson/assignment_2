@@ -27,7 +27,7 @@ std::unique_ptr<Sensor> makeSensor(SensorType type)
     }
 }
 std::mutex datamutex;
-void SystemController::addMesurements(const std::vector<std::unique_ptr<Sensor>>& sensors) const {
+void SystemController::addMeasurements(const std::vector<std::unique_ptr<Sensor>>& sensors) const {
     std::unique_lock datalock(datamutex);
     if (sensors.empty()) {
         std::cout << "No sensors to read.";
@@ -48,7 +48,7 @@ void SystemController::addMesurements(const std::vector<std::unique_ptr<Sensor>>
 
 void SystemController::runCollector( std::atomic<bool> &is_data_collectinfg, const std::vector<std::unique_ptr<Sensor> >& sensors) {
     while (is_data_collectinfg) {
-        addMesurements(sensors);
+        addMeasurements(sensors);
         std::this_thread::sleep_for(std::chrono::seconds(5));
     }
 }
@@ -249,14 +249,17 @@ void SystemController::run() {
                 switch (Utils::validInput(1,3)) {
                     case 1: {
                         std::cout << "Measurement collected.\n";
-                        addMesurements(sensors_);
+                        addMeasurements(sensors_);
                         Utils::awaitResponse();
                         Utils::clearTerminal();
                         break;
                     }
                     case 2: {
                         std::cout << "Data collector started.\n";
-                        if (!is_datacollecting && !collector.joinable()) {
+                        if (sensors_.empty()) {
+                            std::cout << "No sensors active.\n";
+                        }
+                        else if (!is_datacollecting && !collector.joinable()) {
                         is_datacollecting = true;
                         collector = std::thread(&SystemController::runCollector,
                             this,
