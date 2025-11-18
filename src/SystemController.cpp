@@ -82,18 +82,46 @@ void SystemController::addSensor() {
 
 
 void SystemController::makeObservers(const std::vector<std::unique_ptr<Sensor>>& sensors) {
-    std::cout << "Set new thresholds observers.\n";
+
     for (const auto& s : sensors) {
+        std::cout   << "Set new thresholds observers.\n";
+        std::cout   << "1. Set upper and lower threshold.\n"
+                    << "2. Set upper Threshold.\n"
+                    << "3. Set lower Threshold.\n"
+                    << ">";
+        switch (Utils::validInput(1,3)) {
+            case 1: {
+                std::cout   << "Set the " << Utils::sensorTypeToString(s->getSensorbase().type_) << " alarm interval between "
+                << s->getSensorbase().interval_.min_ << " and " << s->getSensorbase().interval_.max_ << "\n";
+                std::cout << "Please input the lower value then upper.\n" << ">";
 
-        std::cout   << "Set the " << Utils::sensorTypeToString(s->getSensorbase().type_) << " alarm interval between "
-        << s->getSensorbase().interval_.min_ << " and " << s->getSensorbase().interval_.max_ << "\n";
-        std::cout << "Please input the lower value then upper.\n" << ">";
+                auto obs = std::make_unique<ThresholdObserver>(
+                Utils::validFloatInput(),
+                Utils::validFloatInput()
+                );
+                s->addObserver(std::move(obs));
+                break;
+            }
+            case 2: {
+                std::cout   << "Set the upper threshold for " << Utils::sensorTypeToString(s->getSensorbase().type_) << " alarm "
+                << s->getSensorbase().interval_.max_ << "\n";
+                std::cout << "Please input the upper value.\n" << ">";
 
-        auto obs = std::make_unique<ThresholdObserver>(
-            Utils::validFloatInput(),
-            Utils::validFloatInput()
-            );
-        s->addObserver(std::move(obs));
+                auto obs = std::make_unique<ThresholdObserver>(Utils::validFloatInput(),Bound::upper);
+                s->addObserver(std::move(obs));
+                break;
+            }
+            case 3: {
+                std::cout   << "Set the lower threshold for " << Utils::sensorTypeToString(s->getSensorbase().type_) << " alarm "
+                << s->getSensorbase().interval_.min_ << "\n";
+                std::cout << "Please input the upper value.\n" << ">";
+
+                auto obs = std::make_unique<ThresholdObserver>(Utils::validFloatInput(),Bound::lower);
+                s->addObserver(std::move(obs));
+                break;
+            }
+            default: std::cout << "donkey!\n";
+        }
     }
 
 }
